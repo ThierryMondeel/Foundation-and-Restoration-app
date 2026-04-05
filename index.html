@@ -10,295 +10,276 @@
 <title>Foundation &amp; Restoration Training</title>
 <link rel="manifest" href="manifest.json">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
 
-  :root {
-    --bg: #f7f5f0;
-    --surface: #ffffff;
-    --surface2: #f0ede6;
-    --border: rgba(0,0,0,0.1);
-    --border2: rgba(0,0,0,0.18);
-    --text: #1a1916;
-    --text2: #6b6760;
-    --text3: #9e9b96;
-    --green: #2d6a4f;
-    --green-bg: #e8f5ee;
-    --green-border: #a8d5b8;
-    --blue: #1a4a7a;
-    --blue-bg: #e8f0f8;
-    --blue-border: #a8c0dc;
-    --red: #8b2020;
-    --red-bg: #faeaea;
-    --accent: #3d3a35;
-    --radius: 10px;
-    --radius-lg: 14px;
-    --mono: 'DM Mono', monospace;
-    --sans: 'DM Sans', sans-serif;
-  }
+:root {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: rgba(0,0,0,0.1);
+  --border2: rgba(0,0,0,0.18);
+  --text: #1a1916;
+  --text2: #6b6760;
+  --text3: #9e9b96;
+  --green: #2d6a4f;
+  --green-bg: #e8f5ee;
+  --green-border: #a8d5b8;
+  --blue: #1a4a7a;
+  --blue-bg: #e8f0f8;
+  --blue-border: #a8c0dc;
+  --red: #8b2020;
+  --red-bg: #faeaea;
+  --accent: #3d3a35;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.5;
-    min-height: 100dvh;
-  }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100dvh;
+}
 
-  /* Layout */
-  .app { max-width: 600px; margin: 0 auto; padding: 0 0 100px; }
+.app { max-width: 600px; margin: 0 auto; padding: 0 0 100px; }
 
-  /* Header */
-  .header {
-    position: sticky; top: 0; z-index: 10;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 16px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .header-left { display: flex; align-items: baseline; gap: 10px; }
-  .logo { font-family: var(--mono); font-size: 15px; font-weight: 500; letter-spacing: -0.02em; }
-  .cycle-pill {
-    font-family: var(--mono); font-size: 11px; color: var(--text3);
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 20px; padding: 2px 8px;
-  }
+/* Header */
+.header {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.header-left { display: flex; align-items: baseline; gap: 10px; }
+.logo { font-family: var(--mono); font-size: 15px; font-weight: 500; letter-spacing: -0.02em; }
+.cycle-pill {
+  font-family: var(--mono); font-size: 11px; color: var(--text3);
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 2px 8px;
+}
 
-  /* Bottom nav */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    max-width: 600px; margin: 0 auto;
-  }
-  .nav-btn {
-    flex: 1; padding: 10px 4px 14px;
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-    background: none; border: none; cursor: pointer;
-    font-family: var(--sans); font-size: 10px; color: var(--text3);
-    transition: color 0.15s;
-  }
-  .nav-btn.active { color: var(--text); }
-  .nav-btn svg { width: 20px; height: 20px; }
-  .nav-icon { font-size: 18px; line-height: 1; }
+/* Bottom nav */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  max-width: 600px; margin: 0 auto;
+}
+.nav-btn {
+  flex: 1; padding: 10px 4px 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--sans); font-size: 10px; color: var(--text3);
+  transition: color 0.15s;
+}
+.nav-btn.active { color: var(--text); }
+.nav-icon { font-size: 18px; line-height: 1; }
 
-  /* Content area */
-  .content { padding: 16px; }
+/* Content area */
+.content { padding: 16px; }
 
-  /* Toolbar */
-  .toolbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 7px 13px; border-radius: var(--radius);
-    border: 1px solid var(--border2); background: var(--surface);
-    font-family: var(--sans); font-size: 13px; color: var(--text);
-    cursor: pointer; white-space: nowrap; transition: background 0.1s;
-  }
-  .btn:active { background: var(--surface2); }
-  .btn.primary { background: var(--text); color: var(--bg); border-color: transparent; }
-  .btn.primary:active { opacity: 0.8; }
-  .btn.danger { color: var(--red); border-color: #e0a0a0; }
-  .btn.danger:active { background: var(--red-bg); }
-  .btn-icon { font-size: 14px; }
+/* Toolbar */
+.toolbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px; border-radius: var(--radius);
+  border: 1px solid var(--border2); background: var(--surface);
+  font-family: var(--sans); font-size: 13px; color: var(--text);
+  cursor: pointer; white-space: nowrap; transition: background 0.1s;
+}
+.btn:active { background: var(--surface2); }
+.btn.primary { background: var(--text); color: var(--bg); border-color: transparent; }
+.btn.primary:active { opacity: 0.8; }
+.btn.danger { color: var(--red); border-color: #e0a0a0; }
+.btn.danger:active { background: var(--red-bg); }
 
-  /* Search */
-  .search-wrap { position: relative; margin-bottom: 12px; }
-  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; pointer-events: none; }
-  .search {
-    width: 100%; padding: 9px 12px 9px 34px;
-    border: 1px solid var(--border2); border-radius: var(--radius);
-    background: var(--surface); font-family: var(--sans); font-size: 14px;
-    color: var(--text); outline: none;
-  }
-  .search:focus { border-color: var(--text); }
+/* Search */
+.search-wrap { position: relative; margin-bottom: 12px; }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; pointer-events: none; }
+.search {
+  width: 100%; padding: 9px 12px 9px 34px;
+  border: 1px solid var(--border2); border-radius: var(--radius);
+  background: var(--surface); font-family: var(--sans); font-size: 14px;
+  color: var(--text); outline: none;
+}
+.search:focus { border-color: var(--text); }
 
-  /* Filter chips */
-  .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-  .chip {
-    font-size: 12px; padding: 4px 11px; border-radius: 20px;
-    border: 1px solid var(--border); background: var(--surface);
-    cursor: pointer; font-family: var(--sans); color: var(--text2);
-    transition: all 0.1s;
-  }
-  .chip.active { background: var(--text); color: var(--bg); border-color: transparent; }
+/* Filter chips */
+.filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.chip {
+  font-size: 12px; padding: 4px 11px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface);
+  cursor: pointer; font-family: var(--sans); color: var(--text2);
+  transition: all 0.1s;
+}
+.chip.active { background: var(--text); color: var(--bg); border-color: transparent; }
 
-  /* Section headers */
-  .section-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin: 20px 0 8px;
-  }
-  .section-label {
-    font-family: var(--mono); font-size: 11px; font-weight: 500;
-    color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em;
-  }
-  .section-count { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+/* Section headers */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 20px 0 8px;
+}
+.section-label {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em;
+}
+.section-count { font-family: var(--mono); font-size: 11px; color: var(--text3); }
 
-  /* Progress bar */
-  .progress-wrap { margin-bottom: 12px; }
-  .progress-bar { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s ease; }
-  .progress-text { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-top: 4px; }
+/* Progress bar */
+.progress-wrap { margin-bottom: 12px; }
+.progress-bar { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s ease; }
 
-  /* Exercise cards */
-  .ex-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 12px 14px;
-    margin-bottom: 7px; display: flex; align-items: flex-start; gap: 12px;
-    transition: opacity 0.2s;
-  }
-  .ex-card.done { opacity: 0.38; }
-  .ex-card.disabled-ex { opacity: 0.45; }
+/* Exercise cards */
+.ex-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 12px 14px;
+  margin-bottom: 7px; display: flex; align-items: flex-start; gap: 12px;
+  transition: opacity 0.2s;
+}
+.ex-card.done { opacity: 0.38; }
+.ex-card.disabled-ex { opacity: 0.45; }
 
-  .check {
-    width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
-    border: 1.5px solid var(--border2); border-radius: 5px;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    background: var(--surface); transition: all 0.15s;
-  }
-  .check.checked { background: var(--green); border-color: var(--green); color: white; font-size: 12px; }
+.check {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
+  border: 1.5px solid var(--border2); border-radius: 5px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  background: var(--surface); transition: all 0.15s;
+}
+.check.checked { background: var(--green); border-color: var(--green); color: white; font-size: 12px; }
 
-  .ex-body { flex: 1; min-width: 0; }
-  .ex-name { font-size: 14px; font-weight: 500; line-height: 1.4; }
-  .ex-name.done { text-decoration: line-through; }
-  .ex-notes { font-size: 12px; color: var(--text2); margin-top: 4px; line-height: 1.5; font-family: var(--mono); }
-  .ex-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.ex-body { flex: 1; min-width: 0; }
+.ex-name { font-size: 14px; font-weight: 500; line-height: 1.4; }
+.ex-name.done { text-decoration: line-through; }
+.ex-notes { font-size: 12px; color: var(--text2); margin-top: 4px; line-height: 1.5; font-family: var(--mono); }
+.ex-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 
-  .tag {
-    font-size: 10px; padding: 2px 7px; border-radius: 20px;
-    font-family: var(--mono);
-  }
-  .tag.foundation { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
-  .tag.stretch { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
-  .tag.plain { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
-  .tag.disabled { background: var(--red-bg); color: var(--red); border: 1px solid #e0a0a0; }
+.tag { font-size: 10px; padding: 2px 7px; border-radius: 20px; font-family: var(--mono); }
+.tag.foundation { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.tag.stretch { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+.tag.plain { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+.tag.disabled { background: var(--red-bg); color: var(--red); border: 1px solid #e0a0a0; }
 
-  .ex-actions { display: flex; gap: 2px; flex-shrink: 0; }
-  .icon-btn {
-    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-    border: none; background: transparent; cursor: pointer;
-    color: var(--text3); border-radius: 8px; font-size: 14px;
-    transition: all 0.1s;
-  }
-  .icon-btn:active { background: var(--surface2); color: var(--text); }
-  .icon-btn.red:active { background: var(--red-bg); color: var(--red); }
+.ex-actions { display: flex; gap: 2px; flex-shrink: 0; }
+.icon-btn {
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  border: none; background: transparent; cursor: pointer;
+  color: var(--text3); border-radius: 8px; font-size: 14px;
+  transition: all 0.1s;
+}
+.icon-btn:active { background: var(--surface2); color: var(--text); }
+.icon-btn.red:active { background: var(--red-bg); color: var(--red); }
 
-  /* Empty state */
-  .empty { text-align: center; padding: 40px 16px; color: var(--text3); font-size: 13px; }
+/* Empty state */
+.empty { text-align: center; padding: 40px 16px; color: var(--text3); font-size: 13px; }
 
-  /* Avoid pairs */
-  .avoid-item {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 12px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    margin-bottom: 6px; font-size: 13px; gap: 8px;
-  }
-  .avoid-names { flex: 1; min-width: 0; line-height: 1.4; }
-  .avoid-sep { font-family: var(--mono); font-size: 11px; color: var(--text3); margin: 0 4px; }
+/* Avoid pairs */
+.avoid-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 6px; font-size: 13px; gap: 8px;
+}
+.avoid-names { flex: 1; min-width: 0; line-height: 1.4; }
+.avoid-sep { font-family: var(--mono); font-size: 11px; color: var(--text3); margin: 0 4px; }
 
-  /* Settings rows */
-  .setting-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 0; border-bottom: 1px solid var(--border); gap: 12px;
-  }
-  .setting-label { font-size: 14px; }
-  .setting-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+/* Toggle */
+.toggle {
+  width: 40px; height: 24px; border-radius: 12px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.toggle.on { background: var(--green); border-color: var(--green); }
+.toggle::after {
+  content: ''; position: absolute;
+  width: 18px; height: 18px; border-radius: 50%; background: white;
+  top: 2px; left: 2px; transition: left 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle.on::after { left: 18px; }
 
-  /* Toggle */
-  .toggle {
-    width: 40px; height: 24px; border-radius: 12px;
-    background: var(--surface2); border: 1px solid var(--border2);
-    cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0;
-  }
-  .toggle.on { background: var(--green); border-color: var(--green); }
-  .toggle::after {
-    content: ''; position: absolute;
-    width: 18px; height: 18px; border-radius: 50%; background: white;
-    top: 2px; left: 2px; transition: left 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  }
-  .toggle.on::after { left: 18px; }
+/* Modal */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 100; padding: 0;
+}
+@media (min-width: 500px) { .modal-bg { align-items: center; padding: 1rem; } }
+.modal {
+  background: var(--surface); width: 100%; max-width: 520px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 20px 20px 32px;
+  max-height: 92dvh; overflow-y: auto;
+}
+@media (min-width: 500px) { .modal { border-radius: var(--radius-lg); padding: 24px; } }
+.modal-handle {
+  width: 36px; height: 4px; background: var(--border2);
+  border-radius: 2px; margin: 0 auto 16px;
+}
+@media (min-width: 500px) { .modal-handle { display: none; } }
+.modal h2 { font-size: 16px; font-weight: 500; margin-bottom: 16px; }
 
-  /* Modal */
-  .modal-bg {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.4);
-    display: flex; align-items: flex-end; justify-content: center;
-    z-index: 100; padding: 0;
-  }
-  @media (min-width: 500px) {
-    .modal-bg { align-items: center; padding: 1rem; }
-  }
-  .modal {
-    background: var(--surface); width: 100%; max-width: 520px;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding: 20px 20px 32px;
-    max-height: 92dvh; overflow-y: auto;
-  }
-  @media (min-width: 500px) {
-    .modal { border-radius: var(--radius-lg); padding: 24px; }
-  }
-  .modal-handle {
-    width: 36px; height: 4px; background: var(--border2);
-    border-radius: 2px; margin: 0 auto 16px;
-  }
-  @media (min-width: 500px) { .modal-handle { display: none; } }
-  .modal h2 { font-size: 16px; font-weight: 500; margin-bottom: 16px; }
+/* Form fields */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--mono); }
+.field input, .field textarea, .field select {
+  width: 100%; padding: 9px 12px;
+  border: 1px solid var(--border2); border-radius: var(--radius);
+  background: var(--bg); font-family: var(--sans); font-size: 14px;
+  color: var(--text); outline: none; appearance: none;
+}
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--text); }
+.field textarea { min-height: 80px; resize: vertical; }
 
-  /* Form fields */
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--mono); }
-  .field input, .field textarea, .field select {
-    width: 100%; padding: 9px 12px;
-    border: 1px solid var(--border2); border-radius: var(--radius);
-    background: var(--bg); font-family: var(--sans); font-size: 14px;
-    color: var(--text); outline: none; appearance: none;
-  }
-  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--text); }
-  .field textarea { min-height: 80px; resize: vertical; }
+.tag-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tag-chip {
+  font-size: 12px; padding: 4px 11px; border-radius: 20px;
+  border: 1px solid var(--border2); background: var(--surface);
+  cursor: pointer; font-family: var(--mono); color: var(--text2); transition: all 0.1s;
+}
+.tag-chip.on { background: var(--text); color: var(--bg); border-color: transparent; }
 
-  .tag-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-  .tag-chip {
-    font-size: 12px; padding: 4px 11px; border-radius: 20px;
-    border: 1px solid var(--border2); background: var(--surface);
-    cursor: pointer; font-family: var(--mono); color: var(--text2); transition: all 0.1s;
-  }
-  .tag-chip.on { background: var(--text); color: var(--bg); border-color: transparent; }
+.modal-footer { display: flex; gap: 8px; margin-top: 18px; }
+.modal-footer .btn { flex: 1; justify-content: center; padding: 11px; }
 
-  .modal-footer { display: flex; gap: 8px; margin-top: 18px; }
-  .modal-footer .btn { flex: 1; justify-content: center; padding: 11px; }
+/* Complete banner */
+.complete-banner {
+  background: var(--green-bg); border: 1px solid var(--green-border);
+  border-radius: var(--radius-lg); padding: 14px 16px;
+  text-align: center; margin-bottom: 16px;
+}
+.complete-banner strong { color: var(--green); font-size: 15px; display: block; }
+.complete-banner small { color: var(--green); font-size: 12px; font-family: var(--mono); }
 
-  /* Complete banner */
-  .complete-banner {
-    background: var(--green-bg); border: 1px solid var(--green-border);
-    border-radius: var(--radius-lg); padding: 14px 16px;
-    text-align: center; margin-bottom: 16px;
-  }
-  .complete-banner strong { color: var(--green); font-size: 15px; display: block; }
-  .complete-banner small { color: var(--green); font-size: 12px; font-family: var(--mono); }
+/* Category tabs */
+.cat-tabs { display: flex; margin-bottom: 16px; border: 1px solid var(--border2); border-radius: var(--radius); overflow: hidden; }
+.cat-tab {
+  flex: 1; padding: 9px 12px; text-align: center;
+  background: var(--surface); border: none; cursor: pointer;
+  font-family: var(--sans); font-size: 13px; color: var(--text2);
+  transition: all 0.15s;
+}
+.cat-tab + .cat-tab { border-left: 1px solid var(--border2); }
+.cat-tab.active { background: var(--text); color: var(--bg); }
 
-  /* Category tabs */
-  .cat-tabs { display: flex; margin-bottom: 16px; border: 1px solid var(--border2); border-radius: var(--radius); overflow: hidden; }
-  .cat-tab {
-    flex: 1; padding: 9px 12px; text-align: center;
-    background: var(--surface); border: none; cursor: pointer;
-    font-family: var(--sans); font-size: 13px; color: var(--text2);
-    transition: all 0.15s;
-  }
-  .cat-tab + .cat-tab { border-left: 1px solid var(--border2); }
-  .cat-tab.active { background: var(--text); color: var(--bg); }
+/* Loading */
+.loading { text-align: center; padding: 60px 16px; color: var(--text3); font-family: var(--mono); font-size: 13px; }
 
-  /* Loading */
-  .loading { text-align: center; padding: 60px 16px; color: var(--text3); font-family: var(--mono); font-size: 13px; }
-
-  /* Info box */
-  .info-box {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 12px 14px;
-    font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 14px;
-  }
-  .info-box code { font-family: var(--mono); font-size: 12px; background: var(--border); padding: 1px 5px; border-radius: 4px; color: var(--text); }
+/* Info box */
+.info-box {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 14px;
+  font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 14px;
+}
+.info-box code { font-family: var(--mono); font-size: 12px; background: var(--border); padding: 1px 5px; border-radius: 4px; color: var(--text); }
 </style>
 </head>
 <body>
@@ -319,10 +300,6 @@
       <span class="nav-icon">☑</span>
       <span>Workout</span>
     </button>
-    <button class="nav-btn" id="nav-manage" onclick="setTab('manage')">
-      <span class="nav-icon">✎</span>
-      <span>Manage</span>
-    </button>
     <button class="nav-btn" id="nav-settings" onclick="setTab('settings')">
       <span class="nav-icon">⚙</span>
       <span>Settings</span>
@@ -338,6 +315,7 @@ const DEFAULT_TAGS = ['Supine','Squat','Prone','Side-lying','Lunge','Standing','
 
 // ── Utils ──────────────────────────────────────────────────────────────────
 function uid() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -346,9 +324,11 @@ function shuffle(arr) {
   }
   return a;
 }
+
 function isBlocked(a, b, pairs) {
   return pairs.some(p => (p.a === a && p.b === b) || (p.a === b && p.b === a));
 }
+
 function sharePositionTag(idA, idB) {
   const a = exById(idA), b = exById(idB);
   if (!a || !b) return false;
@@ -356,6 +336,7 @@ function sharePositionTag(idA, idB) {
   const tagsB = b.tags.filter(t => t !== 'Locomotion');
   return tagsA.some(t => tagsB.includes(t));
 }
+
 function constrainedShuffle(ids, pairs) {
   if (ids.length <= 2) return shuffle(ids);
   let best = shuffle(ids), bestV = Infinity;
@@ -376,12 +357,17 @@ function constrainedShuffle(ids, pairs) {
   }
   return best;
 }
+
 function buildOrder(exercises, pairs) {
   const en = exercises.filter(e => e.enabled);
   return {
     foundation: constrainedShuffle(en.filter(e => e.category === 'foundation').map(e => e.id), pairs),
     stretch: constrainedShuffle(en.filter(e => e.category === 'stretch').map(e => e.id), pairs),
   };
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -398,9 +384,11 @@ function loadState() {
     return s;
   } catch { return null; }
 }
+
 function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
 }
+
 function createState(exercises) {
   return {
     version: 1, cycle: 1,
@@ -410,9 +398,10 @@ function createState(exercises) {
     tagSuggestions: DEFAULT_TAGS,
   };
 }
+
 function exById(id) { return state.exercises.find(e => e.id === id); }
 
-// ── Fetch exercises.json ───────────────────────────────────────────────────
+// ── Bootstrap ──────────────────────────────────────────────────────────────
 async function init() {
   state = loadState();
   if (!state) {
@@ -428,7 +417,6 @@ async function init() {
     }
     saveState();
   } else {
-    // Always rebuild order on load
     state.order = buildOrder(state.exercises, state.avoidPairs);
   }
   render();
@@ -458,88 +446,142 @@ function allDone() {
 // ── Render ─────────────────────────────────────────────────────────────────
 function render() {
   document.getElementById('cycle-pill').textContent = `cycle ${state.cycle}`;
-  ['checklist','manage','settings'].forEach(t => {
-    document.getElementById('nav-' + t).classList.toggle('active', activeTab === t);
+  ['checklist','settings'].forEach(t => {
+    const el = document.getElementById('nav-' + t);
+    if (el) el.classList.toggle('active', activeTab === t);
   });
+
   const content = document.getElementById('content');
-  if (activeTab === 'checklist') content.innerHTML = renderChecklist();
-  else if (activeTab === 'manage') content.innerHTML = renderManage();
-  else content.innerHTML = renderSettings();
+  if (activeTab === 'checklist') {
+    content.innerHTML = renderChecklistShell();
+    // Set search value and attach listener — does NOT trigger re-render
+    const inp = document.getElementById('search-input');
+    if (inp) {
+      inp.value = searchQ;
+      inp.addEventListener('input', e => {
+        searchQ = e.target.value;
+        refreshList();
+      });
+    }
+    // Tag filter chips via event delegation
+    const filterBar = document.getElementById('filter-bar');
+    if (filterBar) {
+      filterBar.addEventListener('click', e => {
+        const chip = e.target.closest('.filter-chip');
+        if (!chip) return;
+        tagFilter = chip.dataset.tag === '__all__' ? null : chip.dataset.tag;
+        filterBar.querySelectorAll('.filter-chip').forEach(c =>
+          c.classList.toggle('active', c.dataset.tag === (tagFilter || '__all__'))
+        );
+        refreshList();
+      });
+    }
+    refreshList();
+  } else {
+    content.innerHTML = renderSettings();
+  }
 
   document.getElementById('modal-container').innerHTML = modal ? renderModal() : '';
 }
 
-function filteredList(cat) {
-  const ordered = (state.order[cat] || []).map(id => exById(id)).filter(Boolean);
-  const inOrder = new Set(state.order[cat] || []);
-  const extra = state.exercises.filter(e => e.category === cat && !inOrder.has(e.id));
-  let all = [...ordered, ...extra];
-  if (!showDisabled) all = all.filter(e => e.enabled);
-  if (tagFilter) all = all.filter(e => e.tags.includes(tagFilter));
-  if (searchQ) all = all.filter(e =>
-    e.name.toLowerCase().includes(searchQ.toLowerCase()) ||
-    e.notes.toLowerCase().includes(searchQ.toLowerCase())
-  );
-  return all;
-}
+// Partial refresh — only updates exercise list + progress, never touches search input
+function refreshList() {
+  const listEl = document.getElementById('exercise-list');
+  if (listEl) listEl.innerHTML = renderExerciseList();
 
-function allTags() {
-  return [...new Set(state.exercises.flatMap(e => e.tags))].sort();
-}
-
-function renderFilterBar() {
-  return `<div class="filter-bar">
-    <span class="chip ${tagFilter === null ? 'active' : ''}" onclick="setTagFilter(null)">All</span>
-    ${allTags().map(t => `<span class="chip ${tagFilter === t ? 'active' : ''}" onclick="setTagFilter('${esc(t)}')">${esc(t)}</span>`).join('')}
-  </div>`;
-}
-
-function renderChecklist() {
   const doneF = countDone('foundation'), totF = countTotal('foundation');
   const doneS = countDone('stretch'), totS = countTotal('stretch');
-  const done = doneF + doneS, tot = totF + totS;
-  let h = '';
-  if (allDone()) {
-    h += `<div class="complete-banner">
-      <strong>Session complete!</strong>
-      <small>Cycle ${state.cycle} done — ${tot} exercises</small>
-    </div>
-    <div class="toolbar">
-      <button class="btn primary" onclick="nextCycle()">Next cycle →</button>
-      <button class="btn" onclick="reshuffleAll()">↻ Reshuffle</button>
-    </div>`;
-  } else {
-    h += `<div class="toolbar">
-      <button class="btn primary" onclick="reshuffleAll()">↻ Reshuffle</button>
-      <button class="btn" onclick="clearAll()">Clear</button>
-    </div>`;
-  }
-  h += `<div class="cat-tabs">
-    <button class="cat-tab ${checklistCat === 'foundation' ? 'active' : ''}" onclick="setChecklistCat('foundation')">
-      Restoration · Foundation <span style="font-family:var(--mono);font-size:11px;opacity:0.7">${doneF}/${totF}</span>
-    </button>
-    <button class="cat-tab ${checklistCat === 'stretch' ? 'active' : ''}" onclick="setChecklistCat('stretch')">
-      Stretch <span style="font-family:var(--mono);font-size:11px;opacity:0.7">${doneS}/${totS}</span>
-    </button>
-  </div>`;
-  h += `<div class="search-wrap">
-    <span class="search-icon">⌕</span>
-    <input class="search" type="search" placeholder="Search..." value="${esc(searchQ)}" oninput="setSearch(this.value)">
-  </div>`;
-  h += renderFilterBar();
-
   const cat = checklistCat;
-  const list = filteredList(cat);
   const d = cat === 'foundation' ? doneF : doneS;
   const t = cat === 'foundation' ? totF : totS;
   const pct = t > 0 ? Math.round(d / t * 100) : 0;
-  h += `<div class="progress-wrap">
-    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-  </div>`;
-  if (!list.length) { h += `<div class="empty">No exercises match.</div>`; return h; }
-  list.forEach(ex => {
+
+  const fill = document.getElementById('progress-fill');
+  if (fill) fill.style.width = pct + '%';
+
+  // Update cat tab counts
+  const tabF = document.getElementById('cat-tab-foundation');
+  const tabS = document.getElementById('cat-tab-stretch');
+  if (tabF) tabF.querySelector('.tab-count').textContent = `${doneF}/${totF}`;
+  if (tabS) tabS.querySelector('.tab-count').textContent = `${doneS}/${totS}`;
+
+  // Banner + next cycle
+  const banner = document.getElementById('complete-banner');
+  const nextBtn = document.getElementById('next-cycle-btn');
+  if (banner) banner.style.display = allDone() ? 'block' : 'none';
+  if (nextBtn) nextBtn.style.display = allDone() ? 'inline-flex' : 'none';
+}
+
+// ── Checklist shell (rendered once per tab switch) ─────────────────────────
+function renderChecklistShell() {
+  const doneF = countDone('foundation'), totF = countTotal('foundation');
+  const doneS = countDone('stretch'), totS = countTotal('stretch');
+  const allTags = [...new Set(state.exercises.flatMap(e => e.tags))].sort();
+  const cat = checklistCat;
+  const d = cat === 'foundation' ? doneF : doneS;
+  const t = cat === 'foundation' ? totF : totS;
+  const pct = t > 0 ? Math.round(d / t * 100) : 0;
+
+  return `
+  <div id="complete-banner" class="complete-banner" style="display:${allDone() ? 'block' : 'none'}">
+    <strong>Session complete!</strong>
+    <small>Cycle ${state.cycle} done — ${totF + totS} exercises</small>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn primary" onclick="reshuffleAll()">↻ Reshuffle</button>
+    <button id="next-cycle-btn" class="btn" onclick="nextCycle()" style="display:${allDone() ? 'inline-flex' : 'none'}">Next cycle →</button>
+    <button class="btn" onclick="clearAll()">Clear</button>
+    <button class="btn primary" onclick="openAdd()">+ Add</button>
+    <button class="btn" onclick="exportData()">↓ Export</button>
+    <label class="btn" style="cursor:pointer">↑ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+  </div>
+
+  <div class="cat-tabs">
+    <button id="cat-tab-foundation" class="cat-tab ${checklistCat === 'foundation' ? 'active' : ''}" onclick="setChecklistCat('foundation')">
+      Restoration · Foundation <span class="tab-count" style="font-family:var(--mono);font-size:11px;opacity:0.7">${doneF}/${totF}</span>
+    </button>
+    <button id="cat-tab-stretch" class="cat-tab ${checklistCat === 'stretch' ? 'active' : ''}" onclick="setChecklistCat('stretch')">
+      Stretch <span class="tab-count" style="font-family:var(--mono);font-size:11px;opacity:0.7">${doneS}/${totS}</span>
+    </button>
+  </div>
+
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input id="search-input" class="search" type="search" placeholder="Search..." autocomplete="off" autocorrect="off" spellcheck="false">
+  </div>
+
+  <div class="filter-bar" id="filter-bar">
+    <span class="filter-chip chip ${tagFilter === null ? 'active' : ''}" data-tag="__all__">All</span>
+    ${allTags.map(t => `<span class="filter-chip chip ${tagFilter === t ? 'active' : ''}" data-tag="${esc(t)}">${esc(t)}</span>`).join('')}
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:${pct}%"></div></div>
+  </div>
+
+  <div id="exercise-list"></div>`;
+}
+
+function filteredList(cat) {
+  const inOrder = new Set(state.order[cat] || []);
+  const ordered = (state.order[cat] || []).map(id => exById(id)).filter(Boolean);
+  const extra = state.exercises.filter(e => e.category === cat && !inOrder.has(e.id));
+  let all = [...ordered, ...extra].filter(e => e.enabled);
+  if (tagFilter) all = all.filter(e => e.tags.includes(tagFilter));
+  if (searchQ) {
+    const q = searchQ.toLowerCase();
+    all = all.filter(e => e.name.toLowerCase().includes(q) || e.notes.toLowerCase().includes(q));
+  }
+  return all;
+}
+
+function renderExerciseList() {
+  const list = filteredList(checklistCat);
+  if (!list.length) return `<div class="empty">No exercises match.</div>`;
+  return list.map(ex => {
     const done = !!state.completed[ex.id];
-    h += `<div class="ex-card ${done ? 'done' : ''} ${!ex.enabled ? 'disabled-ex' : ''}">
+    return `<div class="ex-card ${done ? 'done' : ''}">
       <div class="check ${done ? 'checked' : ''}" onclick="toggleDone('${ex.id}')">${done ? '✓' : ''}</div>
       <div class="ex-body">
         <div class="ex-name ${done ? 'done' : ''}">${esc(ex.name)}</div>
@@ -549,63 +591,43 @@ function renderChecklist() {
           ${ex.tags.map(t => `<span class="tag plain">${esc(t)}</span>`).join('')}
         </div>
       </div>
+      <div class="ex-actions">
+        <button class="icon-btn" onclick="openEdit('${ex.id}')" title="Edit">✎</button>
+      </div>
     </div>`;
-  });
-  return h;
+  }).join('');
 }
 
-function renderManage() {
-  let h = `<div class="toolbar">
-    <button class="btn primary" onclick="openAdd()">+ Add</button>
-    <button class="btn" onclick="toggleShowDisabled()">${showDisabled ? 'Hide disabled' : 'Show disabled'}</button>
-    <button class="btn" onclick="exportData()">↓ Export</button>
-    <label class="btn">↑ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
-  </div>
-  <div class="search-wrap">
-    <span class="search-icon">⌕</span>
-    <input class="search" type="search" placeholder="Search..." value="${esc(searchQ)}" oninput="setSearch(this.value)">
-  </div>`;
-  h += renderFilterBar();
-  ['foundation','stretch'].forEach(cat => {
-    const list = state.exercises.filter(e =>
-      e.category === cat &&
-      (showDisabled || e.enabled) &&
-      (!tagFilter || e.tags.includes(tagFilter)) &&
-      (!searchQ || e.name.toLowerCase().includes(searchQ.toLowerCase()) || e.notes.toLowerCase().includes(searchQ.toLowerCase()))
-    );
-    h += `<div class="section-header">
-      <span class="section-label">${cat === 'foundation' ? 'Restoration · Foundation' : 'Stretch'}</span>
-      <span class="section-count">${list.length}</span>
-    </div>`;
-    list.forEach(ex => {
-      h += `<div class="ex-card ${!ex.enabled ? 'disabled-ex' : ''}">
-        <div class="ex-body">
-          <div class="ex-name">${esc(ex.name)}</div>
-          ${ex.notes ? `<div class="ex-notes">${esc(ex.notes)}</div>` : ''}
-          <div class="ex-tags">
-            <span class="tag ${ex.category}">${ex.category === 'foundation' ? 'Foundation' : 'Stretch'}</span>
-            ${ex.tags.map(t => `<span class="tag plain">${esc(t)}</span>`).join('')}
-            ${!ex.enabled ? `<span class="tag disabled">disabled</span>` : ''}
-          </div>
-        </div>
-        <div class="ex-actions">
-          <button class="icon-btn" onclick="toggleEnabled('${ex.id}')" title="${ex.enabled ? 'Disable' : 'Enable'}">${ex.enabled ? '○' : '●'}</button>
-          <button class="icon-btn" onclick="openEdit('${ex.id}')">✎</button>
-          <button class="icon-btn red" onclick="deleteEx('${ex.id}')">✕</button>
-        </div>
-      </div>`;
-    });
-  });
-  return h;
-}
-
+// ── Settings tab ───────────────────────────────────────────────────────────
 function renderSettings() {
   const pairs = state.avoidPairs || [];
   return `
-  <div class="section-header" style="margin-top:4px"><span class="section-label">Avoid pairs</span></div>
+  <div class="section-header" style="margin-top:4px"><span class="section-label">Exercise list</span></div>
+  <div class="info-box">Enable or disable exercises. Disabled ones stay in your database but are excluded from the workout shuffle.</div>
+  <div class="toolbar" style="margin-bottom:16px">
+    <button class="btn" onclick="toggleShowDisabled()">${showDisabled ? 'Hide disabled' : 'Show disabled'}</button>
+  </div>
+  ${state.exercises.map(ex => `
+    <div class="ex-card ${!ex.enabled ? 'disabled-ex' : ''}">
+      <div class="ex-body">
+        <div class="ex-name">${esc(ex.name)}</div>
+        <div class="ex-tags">
+          <span class="tag ${ex.category}">${ex.category === 'foundation' ? 'Foundation' : 'Stretch'}</span>
+          ${ex.tags.map(t => `<span class="tag plain">${esc(t)}</span>`).join('')}
+          ${!ex.enabled ? `<span class="tag disabled">disabled</span>` : ''}
+        </div>
+      </div>
+      <div class="ex-actions">
+        <button class="icon-btn" onclick="toggleEnabled('${ex.id}')" title="${ex.enabled ? 'Disable' : 'Enable'}">${ex.enabled ? '○' : '●'}</button>
+        <button class="icon-btn" onclick="openEdit('${ex.id}')">✎</button>
+        <button class="icon-btn red" onclick="deleteEx('${ex.id}')">✕</button>
+      </div>
+    </div>`).join('')}
+
+  <div class="section-header" style="margin-top:24px"><span class="section-label">Avoid pairs</span></div>
   <div class="info-box">Exercises that should not appear back-to-back when shuffling.</div>
   <button class="btn" onclick="openAvoid()" style="margin-bottom:12px">+ Add pair</button>
-  ${pairs.length === 0 ? '<div class="empty" style="padding:20px 0">No avoid pairs set.</div>' :
+  ${!pairs.length ? '<div class="empty" style="padding:20px 0">No avoid pairs set.</div>' :
     pairs.map((p, i) => {
       const a = exById(p.a), b = exById(p.b);
       if (!a || !b) return '';
@@ -613,12 +635,11 @@ function renderSettings() {
         <div class="avoid-names">${esc(a.name)}<span class="avoid-sep">↔</span>${esc(b.name)}</div>
         <button class="icon-btn red" onclick="removeAvoid(${i})">✕</button>
       </div>`;
-    }).join('')
-  }
+    }).join('')}
 
   <div class="section-header" style="margin-top:24px"><span class="section-label">Tag suggestions</span></div>
   <div class="info-box">Comma-separated. These appear as quick-add chips when editing exercises.</div>
-  <textarea class="field" style="width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--bg);font-family:var(--sans);font-size:14px;color:var(--text);min-height:80px;outline:none" oninput="updateTagSuggestions(this.value)">${esc(state.tagSuggestions.join(', '))}</textarea>
+  <textarea style="width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--bg);font-family:var(--sans);font-size:14px;color:var(--text);min-height:80px;outline:none" oninput="updateTagSuggestions(this.value)">${esc(state.tagSuggestions.join(', '))}</textarea>
 
   <div class="section-header" style="margin-top:24px"><span class="section-label">Data</span></div>
   <div class="info-box">Reset clears all progress and restores the default exercise list from <code>exercises.json</code>.</div>
@@ -627,11 +648,12 @@ function renderSettings() {
   </div>`;
 }
 
+// ── Modal ──────────────────────────────────────────────────────────────────
 function renderModal() {
   if (modal.type === 'edit' || modal.type === 'add') {
     const ex = modal.ex;
     const tags = ex.tags || [];
-    return `<div class="modal-bg" onclick="bgClose(event)">
+    return `<div class="modal-bg" id="modal-bg">
     <div class="modal">
       <div class="modal-handle"></div>
       <h2>${modal.type === 'add' ? 'Add exercise' : 'Edit exercise'}</h2>
@@ -669,7 +691,7 @@ function renderModal() {
   }
   if (modal.type === 'avoid') {
     const en = state.exercises.filter(e => e.enabled);
-    return `<div class="modal-bg" onclick="bgClose(event)">
+    return `<div class="modal-bg" id="modal-bg">
     <div class="modal">
       <div class="modal-handle"></div>
       <h2>Add avoid pair</h2>
@@ -692,55 +714,82 @@ function renderModal() {
   return '';
 }
 
-// ── Helpers ────────────────────────────────────────────────────────────────
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function showModal() {
+  document.getElementById('modal-container').innerHTML = renderModal();
+  const bg = document.getElementById('modal-bg');
+  if (bg) bg.addEventListener('click', e => { if (e.target.id === 'modal-bg') closeModal(); });
 }
 
 // ── Actions ────────────────────────────────────────────────────────────────
-window.setTab = t => { activeTab = t; render(); };
-window.setChecklistCat = t => { checklistCat = t; render(); };
-window.setSearch = v => { searchQ = v; render(); };
-window.setTagFilter = t => { tagFilter = t; render(); };
-window.toggleShowDisabled = () => { showDisabled = !showDisabled; render(); };
-window.bgClose = e => { if (e.target.classList.contains('modal-bg')) closeModal(); };
-window.closeModal = () => { modal = null; render(); };
+window.setTab = t => { activeTab = t; searchQ = ''; tagFilter = null; render(); };
+
+window.setChecklistCat = t => {
+  checklistCat = t;
+  // Update tab active states without full re-render
+  document.querySelectorAll('.cat-tab').forEach(el => {
+    el.classList.toggle('active', el.id === 'cat-tab-' + t);
+  });
+  refreshList();
+};
 
 window.toggleDone = id => {
   state.completed[id] = !state.completed[id];
-  saveState(); render();
+  saveState(); refreshList();
 };
-window.clearAll = () => { state.completed = {}; saveState(); render(); };
+
+window.clearAll = () => { state.completed = {}; saveState(); refreshList(); };
+
 window.reshuffleAll = () => {
   state.order = buildOrder(state.exercises, state.avoidPairs);
   state.completed = {}; saveState(); render();
 };
+
 window.nextCycle = () => {
   state.cycle++;
   state.order = buildOrder(state.exercises, state.avoidPairs);
   state.completed = {}; saveState(); render();
 };
+
 window.toggleEnabled = id => {
-  const ex = exById(id);
-  if (ex) { ex.enabled = !ex.enabled; state.order = buildOrder(state.exercises, state.avoidPairs); saveState(); render(); }
+  const ex = exById(id); if (!ex) return;
+  ex.enabled = !ex.enabled;
+  state.order = buildOrder(state.exercises, state.avoidPairs);
+  saveState(); render();
 };
+
+window.toggleShowDisabled = () => { showDisabled = !showDisabled; render(); };
+
 window.deleteEx = id => {
   if (!confirm('Delete this exercise?')) return;
   state.exercises = state.exercises.filter(e => e.id !== id);
   state.order = buildOrder(state.exercises, state.avoidPairs);
   saveState(); render();
 };
-window.openAdd = () => { modal = { type: 'add', ex: { category: 'foundation', enabled: true, tags: [], name: '', notes: '' } }; render(); };
-window.openEdit = id => {
-  const ex = exById(id);
-  if (ex) { modal = { type: 'edit', ex: { ...ex, tags: [...ex.tags] } }; render(); }
+
+window.closeModal = () => {
+  modal = null;
+  document.getElementById('modal-container').innerHTML = '';
 };
-window.openAvoid = () => { modal = { type: 'avoid' }; render(); };
+
+window.openAdd = () => {
+  modal = { type: 'add', ex: { category: checklistCat, enabled: true, tags: [], name: '', notes: '' } };
+  showModal();
+};
+
+window.openEdit = id => {
+  const ex = exById(id); if (!ex) return;
+  modal = { type: 'edit', ex: { ...ex, tags: [...ex.tags] } };
+  showModal();
+};
+
+window.openAvoid = () => { modal = { type: 'avoid' }; showModal(); };
+
 window.flipEnabled = () => {
   modal.ex.enabled = !modal.ex.enabled;
   document.getElementById('m-toggle').classList.toggle('on', modal.ex.enabled);
   document.getElementById('m-toggle-label').textContent = modal.ex.enabled ? 'Included' : 'Excluded';
 };
+
 window.toggleTag = t => {
   const tags = modal.ex.tags;
   const i = tags.indexOf(t);
@@ -750,12 +799,12 @@ window.toggleTag = t => {
     if (c.textContent === t) c.classList.toggle('on', tags.includes(t));
   });
 };
+
 window.saveEx = () => {
   const name = document.getElementById('m-name').value.trim();
   if (!name) { alert('Name is required.'); return; }
   const cat = document.getElementById('m-cat').value;
-  const tagsRaw = document.getElementById('m-tags').value;
-  const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+  const tags = document.getElementById('m-tags').value.split(',').map(t => t.trim()).filter(Boolean);
   const notes = document.getElementById('m-notes').value.trim();
   const enabled = modal.ex.enabled !== false;
   if (modal.type === 'add') {
@@ -767,6 +816,7 @@ window.saveEx = () => {
   state.order = buildOrder(state.exercises, state.avoidPairs);
   modal = null; saveState(); render();
 };
+
 window.saveAvoid = () => {
   const a = document.getElementById('av-a').value;
   const b = document.getElementById('av-b').value;
@@ -775,11 +825,14 @@ window.saveAvoid = () => {
     state.avoidPairs.push({ a, b });
   modal = null; saveState(); render();
 };
+
 window.removeAvoid = i => { state.avoidPairs.splice(i, 1); saveState(); render(); };
+
 window.updateTagSuggestions = v => {
   state.tagSuggestions = v.split(',').map(t => t.trim()).filter(Boolean);
   saveState();
 };
+
 window.exportData = () => {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
@@ -787,6 +840,7 @@ window.exportData = () => {
   a.download = 'p3-protocol-backup.json';
   a.click();
 };
+
 window.importData = e => {
   const file = e.target.files[0]; if (!file) return;
   const r = new FileReader();
@@ -803,6 +857,7 @@ window.importData = e => {
   };
   r.readAsText(file);
 };
+
 window.resetApp = async () => {
   if (!confirm('Reset everything? This clears all progress and reloads defaults.')) return;
   localStorage.removeItem(STORAGE_KEY);
@@ -811,9 +866,7 @@ window.resetApp = async () => {
     const data = await res.json();
     const exercises = data.map(e => ({ ...e, id: uid() }));
     state = createState(exercises);
-  } catch {
-    state = createState([]);
-  }
+  } catch { state = createState([]); }
   saveState(); render();
 };
 
