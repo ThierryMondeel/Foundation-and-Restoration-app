@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="P3 Protocol">
+<meta name="apple-mobile-web-app-title" content="F&R Training">
 <meta name="theme-color" content="#f7f5f0">
-<title>P3 Protocol</title>
+<title>Foundation &amp; Restoration Training</title>
 <link rel="manifest" href="manifest.json">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
@@ -278,6 +278,17 @@
   .complete-banner strong { color: var(--green); font-size: 15px; display: block; }
   .complete-banner small { color: var(--green); font-size: 12px; font-family: var(--mono); }
 
+  /* Category tabs */
+  .cat-tabs { display: flex; margin-bottom: 16px; border: 1px solid var(--border2); border-radius: var(--radius); overflow: hidden; }
+  .cat-tab {
+    flex: 1; padding: 9px 12px; text-align: center;
+    background: var(--surface); border: none; cursor: pointer;
+    font-family: var(--sans); font-size: 13px; color: var(--text2);
+    transition: all 0.15s;
+  }
+  .cat-tab + .cat-tab { border-left: 1px solid var(--border2); }
+  .cat-tab.active { background: var(--text); color: var(--bg); }
+
   /* Loading */
   .loading { text-align: center; padding: 60px 16px; color: var(--text3); font-family: var(--mono); font-size: 13px; }
 
@@ -294,7 +305,7 @@
 <div class="app">
   <div class="header">
     <div class="header-left">
-      <span class="logo">P3 Protocol</span>
+      <span class="logo">Foundation &amp; Restoration</span>
       <span class="cycle-pill" id="cycle-pill">cycle 1</span>
     </div>
   </div>
@@ -338,6 +349,13 @@ function shuffle(arr) {
 function isBlocked(a, b, pairs) {
   return pairs.some(p => (p.a === a && p.b === b) || (p.a === b && p.b === a));
 }
+function sharePositionTag(idA, idB) {
+  const a = exById(idA), b = exById(idB);
+  if (!a || !b) return false;
+  const tagsA = a.tags.filter(t => t !== 'Locomotion');
+  const tagsB = b.tags.filter(t => t !== 'Locomotion');
+  return tagsA.some(t => tagsB.includes(t));
+}
 function constrainedShuffle(ids, pairs) {
   if (ids.length <= 2) return shuffle(ids);
   let best = shuffle(ids), bestV = Infinity;
@@ -345,12 +363,15 @@ function constrainedShuffle(ids, pairs) {
     const rem = shuffle(ids), res = [];
     while (rem.length) {
       const prev = res[res.length - 1];
-      const vi = rem.findIndex(id => !prev || !isBlocked(prev, id, pairs));
+      const vi = rem.findIndex(id => !prev || (!isBlocked(prev, id, pairs) && !sharePositionTag(prev, id)));
       const pi = vi >= 0 ? vi : 0;
       res.push(rem[pi]); rem.splice(pi, 1);
     }
     let v = 0;
-    for (let i = 1; i < res.length; i++) if (isBlocked(res[i - 1], res[i], pairs)) v++;
+    for (let i = 1; i < res.length; i++) {
+      if (isBlocked(res[i - 1], res[i], pairs)) v++;
+      if (sharePositionTag(res[i - 1], res[i])) v++;
+    }
     if (v < bestV) { best = res; bestV = v; if (v === 0) break; }
   }
   return best;
@@ -415,6 +436,7 @@ async function init() {
 
 // ── UI state ───────────────────────────────────────────────────────────────
 let activeTab = 'checklist';
+let checklistCat = 'foundation';
 let searchQ = '';
 let tagFilter = null;
 let showDisabled = false;
@@ -492,39 +514,42 @@ function renderChecklist() {
       <button class="btn" onclick="clearAll()">Clear</button>
     </div>`;
   }
+  h += `<div class="cat-tabs">
+    <button class="cat-tab ${checklistCat === 'foundation' ? 'active' : ''}" onclick="setChecklistCat('foundation')">
+      Restoration · Foundation <span style="font-family:var(--mono);font-size:11px;opacity:0.7">${doneF}/${totF}</span>
+    </button>
+    <button class="cat-tab ${checklistCat === 'stretch' ? 'active' : ''}" onclick="setChecklistCat('stretch')">
+      Stretch <span style="font-family:var(--mono);font-size:11px;opacity:0.7">${doneS}/${totS}</span>
+    </button>
+  </div>`;
   h += `<div class="search-wrap">
     <span class="search-icon">⌕</span>
     <input class="search" type="search" placeholder="Search..." value="${esc(searchQ)}" oninput="setSearch(this.value)">
   </div>`;
   h += renderFilterBar();
 
-  ['foundation', 'stretch'].forEach(cat => {
-    const list = filteredList(cat);
-    const d = cat === 'foundation' ? doneF : doneS;
-    const t = cat === 'foundation' ? totF : totS;
-    const pct = t > 0 ? Math.round(d / t * 100) : 0;
-    h += `<div class="section-header">
-      <span class="section-label">${cat === 'foundation' ? 'Restoration · Foundation' : 'Stretch'}</span>
-      <span class="section-count">${d}/${t}</span>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-    </div>`;
-    if (!list.length) { h += `<div class="empty">No exercises match.</div>`; return; }
-    list.forEach(ex => {
-      const done = !!state.completed[ex.id];
-      h += `<div class="ex-card ${done ? 'done' : ''} ${!ex.enabled ? 'disabled-ex' : ''}">
-        <div class="check ${done ? 'checked' : ''}" onclick="toggleDone('${ex.id}')">${done ? '✓' : ''}</div>
-        <div class="ex-body">
-          <div class="ex-name ${done ? 'done' : ''}">${esc(ex.name)}</div>
-          ${ex.notes ? `<div class="ex-notes">${esc(ex.notes)}</div>` : ''}
-          <div class="ex-tags">
-            <span class="tag ${ex.category}">${ex.category === 'foundation' ? 'Foundation' : 'Stretch'}</span>
-            ${ex.tags.map(t => `<span class="tag plain">${esc(t)}</span>`).join('')}
-          </div>
+  const cat = checklistCat;
+  const list = filteredList(cat);
+  const d = cat === 'foundation' ? doneF : doneS;
+  const t = cat === 'foundation' ? totF : totS;
+  const pct = t > 0 ? Math.round(d / t * 100) : 0;
+  h += `<div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+  </div>`;
+  if (!list.length) { h += `<div class="empty">No exercises match.</div>`; return h; }
+  list.forEach(ex => {
+    const done = !!state.completed[ex.id];
+    h += `<div class="ex-card ${done ? 'done' : ''} ${!ex.enabled ? 'disabled-ex' : ''}">
+      <div class="check ${done ? 'checked' : ''}" onclick="toggleDone('${ex.id}')">${done ? '✓' : ''}</div>
+      <div class="ex-body">
+        <div class="ex-name ${done ? 'done' : ''}">${esc(ex.name)}</div>
+        ${ex.notes ? `<div class="ex-notes">${esc(ex.notes)}</div>` : ''}
+        <div class="ex-tags">
+          <span class="tag ${ex.category}">${ex.category === 'foundation' ? 'Foundation' : 'Stretch'}</span>
+          ${ex.tags.map(t => `<span class="tag plain">${esc(t)}</span>`).join('')}
         </div>
-      </div>`;
-    });
+      </div>
+    </div>`;
   });
   return h;
 }
@@ -674,6 +699,7 @@ function esc(s) {
 
 // ── Actions ────────────────────────────────────────────────────────────────
 window.setTab = t => { activeTab = t; render(); };
+window.setChecklistCat = t => { checklistCat = t; render(); };
 window.setSearch = v => { searchQ = v; render(); };
 window.setTagFilter = t => { tagFilter = t; render(); };
 window.toggleShowDisabled = () => { showDisabled = !showDisabled; render(); };
