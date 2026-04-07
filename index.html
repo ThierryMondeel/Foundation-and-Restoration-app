@@ -417,7 +417,14 @@ async function init() {
     }
     saveState();
   } else {
-    state.order = buildOrder(state.exercises, state.avoidPairs);
+    // Only rebuild order if exercises have changed (added/removed), not on every load
+    const savedIds = new Set([...(state.order.foundation || []), ...(state.order.stretch || [])]);
+    const currentIds = new Set(state.exercises.map(e => e.id));
+    const hasChanges = state.exercises.some(e => !savedIds.has(e.id)) ||
+      [...savedIds].some(id => !currentIds.has(id));
+    if (!state.order || hasChanges) {
+      state.order = buildOrder(state.exercises, state.avoidPairs);
+    }
   }
   render();
 }
