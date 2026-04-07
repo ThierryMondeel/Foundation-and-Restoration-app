@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "F&R App",
+      "runtimeExecutable": "/usr/local/bin/python3",
+      "runtimeArgs": ["/Users/thierry/Documents/Apps/Foundation-and-Restoration-app/serve.py"],
+      "port": 8787
+    }
+  ]
+}

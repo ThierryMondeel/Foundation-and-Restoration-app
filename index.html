@@ -330,6 +330,7 @@ function isBlocked(a, b, pairs) {
 }
 
 function sharePositionTag(idA, idB) {
+  if (!state) return false;
   const a = exById(idA), b = exById(idB);
   if (!a || !b) return false;
   const tagsA = a.tags.filter(t => t !== 'Locomotion');
@@ -417,11 +418,11 @@ async function init() {
     }
     saveState();
   } else {
-    // Only rebuild order if exercises have changed (added/removed), not on every load
+    // Only rebuild order if the set of enabled exercises has changed, not on every load
     const savedIds = new Set([...(state.order.foundation || []), ...(state.order.stretch || [])]);
-    const currentIds = new Set(state.exercises.map(e => e.id));
-    const hasChanges = state.exercises.some(e => !savedIds.has(e.id)) ||
-      [...savedIds].some(id => !currentIds.has(id));
+    const enabledIds = new Set(state.exercises.filter(e => e.enabled).map(e => e.id));
+    const hasChanges = [...enabledIds].some(id => !savedIds.has(id)) ||
+      [...savedIds].some(id => !enabledIds.has(id));
     if (!state.order || hasChanges) {
       state.order = buildOrder(state.exercises, state.avoidPairs);
     }
