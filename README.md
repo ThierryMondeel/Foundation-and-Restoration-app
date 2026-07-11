@@ -6,7 +6,9 @@ Personal exercise tracker for restoration, foundation and stretch work.
 
 ```
 index.html       ← the full app (no build step)
-exercises.json   ← your exercise list (edit this to update exercises on all devices)
+exercises.yaml   ← your exercise list (edit this to update exercises on all devices)
+exercises.json   ← auto-generated from exercises.yaml (don't edit manually)
+convert.py       ← converter script (run after editing exercises.yaml)
 manifest.json    ← PWA manifest (enables "Add to Home Screen")
 ```
 
@@ -16,7 +18,7 @@ manifest.json    ← PWA manifest (enables "Add to Home Screen")
 2. **Create a new repo** on GitHub called `p3-protocol` (public or private, both work)
 3. **Upload these files** via GitHub's web UI:
    - Click "Add file" → "Upload files"
-   - Drag in `index.html`, `exercises.json`, `manifest.json`
+   - Drag in `index.html`, `exercises.json`, `exercises.yaml`, `convert.py`, `manifest.json`
    - Commit
 4. **Connect to Vercel**:
    - Go to https://vercel.com and sign in with GitHub
@@ -41,14 +43,22 @@ manifest.json    ← PWA manifest (enables "Add to Home Screen")
 
 ## Updating your exercise list
 
-Edit `exercises.json` directly on GitHub (click the file → pencil icon → commit).
+**On your Mac:**
+1. Edit `exercises.yaml` - it's organized by category and position for easy editing
+2. Run `python3 convert.py` to generate `exercises.json`
+3. Commit and push to GitHub
+
+**Directly on GitHub:**
+1. Edit `exercises.yaml` directly on GitHub (click the file → pencil icon → commit)
+2. Run the converter locally to update `exercises.json`, then push both files
+
 Any device opening the app will get the updated list on next load.
 
 **Note**: existing per-device progress/settings live in localStorage and are not
-affected by edits to `exercises.json` unless you hit "Reset to defaults" in Settings.
+affected by edits to `exercises.yaml` unless you hit "Reset to defaults" in Settings.
 
 ## Syncing between devices
 
 - **Export** a backup from the Manage tab on device A
 - **Import** it on device B
-- Or use "Reset to defaults" on a new device to start fresh with the latest `exercises.json`
+- Or use "Reset to defaults" on a new device to start fresh with the latest `exercises.yaml`

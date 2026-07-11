@@ -1,0 +1,160 @@
+# Foundation & Restoration Exercises
+# Edit this file to update your exercise list, then run: python3 convert.py
+# The converted exercises.json will be deployed to your phone
+
+Supine:
+  Foundation:
+    - Name: "Supine with knees straightish in the air"
+      Notes: "30 breaths, neck nods & rotations"
+  
+  Movement:
+    - Name: "Dead bugs"
+      Notes: "30 reps"
+  
+  Stretch:
+    - Name: "(Asymmetrical) happy baby"
+      Notes: ""
+    
+    - Name: "Plow"
+      Notes: ""
+
+Side Lying:
+  Foundation:
+    - Name: "Side plank on knees with hips in air"
+      Notes: "30 breaths, neck nods & rotations"
+  
+  Movement:
+    - Name: "Side plank on feet with rotations and leg lifts"
+      Notes: "10 reps of combo"
+  
+  Stretch:
+    - Name: "Supine side-lying twist"
+      Notes: ""
+
+Prone:
+  Foundation:
+    - Name: "Child's pose"
+      Notes: "30 breaths"
+    
+    - Name: "Seal position"
+      Notes: "30 breaths, neck nods & rotations"
+  
+  Movement:
+    - Name: "Half rolls"
+      Notes: "15 e/s"
+    
+    - Name: "(half) Supermans"
+      Notes: ""
+  
+  Stretch:
+    - Name: "Cliff hanger"
+      Notes: ""
+    
+    - Name: "Sphinx"
+      Notes: "30 breaths; play with elbow positioning"
+
+Sitting:
+  Foundation:
+    - Name: "L-sit"
+      Notes: "30 breaths, neck nods & rotations"
+  
+  Movement:
+    - Name: "Spinal rocks"
+      Notes: ""
+  
+  Stretch:
+    - Name: "Ring sit butterfly stretch"
+      Notes: ""
+    
+    - Name: "Pancake (V-sit)"
+      Notes: "using bands or table leg"
+    
+    - Name: "90:90"
+      Notes: ""
+
+Quadruped:
+  Foundation:
+    - Name: "All fours on elbows"
+      Notes: "30 breaths, neck nods & rotations"
+  
+  Movement:
+    - Name: "Bird dogs"
+      Notes: "30 reps"
+    
+    - Name: "High Bear crawl"
+      Notes: ""
+    
+    - Name: "Crab"
+      Notes: ""
+
+Lunge:
+  Foundation:
+    - Name: "Lunge hold"
+      Notes: "30 breaths, neck nods & rotations"
+  
+  Movement:
+    - Name: "Duck walking"
+      Notes: ""
+  
+  Stretch:
+    - Name: "Blaster"
+      Notes: "On all fours + lunge stepup + hip flexor stretch"
+    
+    - Name: "Half kneel"
+      Notes: "bottom of hunter's lunge + bring arms down to ground"
+
+Squat:
+  Foundation:
+    - Name: "Low bear crawl hold on 1 arm"
+      Notes: "accumulate 30 breaths, neck nods & rotations"
+    
+    - Name: "Squat hold on toes"
+      Notes: "accumulate 30 breaths, neck nods & rotations"
+  
+  Movement:
+    - Name: "Low bear crawl"
+      Notes: ""
+  
+  Stretch:
+    - Name: "Squat hold on flat feet"
+      Notes: "accumulate 5 min"
+    
+    - Name: "Thread the needle"
+      Notes: "sit on yoga block"
+    
+    - Name: "Moving Squat one foot flat one foot on toes"
+      Notes: "stretch ankle & calf & shift weight continuously"
+
+Standing:
+  Foundation:
+    - Name: "Seiza"
+      Notes: "30 breaths, neck nods & rotations"
+    
+    - Name: "Tall kneeling"
+      Notes: "30 breaths, neck nods & rotations"
+  
+  Movement:
+    - Name: "Standing cross crawl"
+      Notes: ""
+    
+    - Name: "Hip windmills"
+      Notes: ""
+  
+  Stretch:
+    - Name: "Rag doll forward fold"
+      Notes: "hold at least until able to touch floor with all fingers"
+    
+    - Name: "Pins & needles"
+      Notes: "max. attempt"
+    
+    - Name: "Horse stance"
+      Notes: ""
+
+Walking & Favorites:
+  Foundation:
+    - Name: "Backward walking"
+      Notes: "at least 5 min"
+  
+  Stretch:
+    - Name: "Incline step ankle stretch (straight & bent knee)"
+      Notes: "e.g. on rack foot"
