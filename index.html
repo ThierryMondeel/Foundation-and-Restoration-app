@@ -48,7 +48,7 @@ body {
   min-height: 100dvh;
 }
 
-.app { max-width: 600px; margin: 0 auto; padding: 0 0 100px; }
+.app { max-width: 600px; margin: 0 auto; padding: 0 0 20px; }
 
 /* Header */
 .header {
@@ -65,24 +65,6 @@ body {
   background: var(--surface2); border: 1px solid var(--border);
   border-radius: 20px; padding: 2px 8px;
 }
-
-/* Bottom nav */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  display: flex;
-  max-width: 600px; margin: 0 auto;
-}
-.nav-btn {
-  flex: 1; padding: 10px 4px 14px;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  background: none; border: none; cursor: pointer;
-  font-family: var(--sans); font-size: 10px; color: var(--text3);
-  transition: color 0.15s;
-}
-.nav-btn.active { color: var(--text); }
-.nav-icon { font-size: 18px; line-height: 1; }
 
 /* Content area */
 .content { padding: 16px; }
@@ -320,15 +302,18 @@ body {
   color: var(--bg);
 }
 .family-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 8px;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 12px;
   color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.family-icon svg {
+.family-icon img {
   width: 100%;
   height: 100%;
-  fill: currentColor;
+  object-fit: contain;
 }
 .family-name {
   font-size: 12px;
@@ -394,16 +379,6 @@ body {
     <div class="loading">Loading exercises...</div>
   </div>
 
-  <nav class="bottom-nav">
-    <button class="nav-btn active" id="nav-checklist" onclick="setTab('checklist')">
-      <span class="nav-icon">☑</span>
-      <span>Workout</span>
-    </button>
-    <button class="nav-btn" id="nav-settings" onclick="setTab('settings')">
-      <span class="nav-icon">⚙</span>
-      <span>Settings</span>
-    </button>
-  </nav>
 </div>
 
 <div id="modal-container"></div>
@@ -457,9 +432,9 @@ function constrainedShuffle(ids, pairs) {
 
 function buildOrder(exercises, pairs) {
   return {
-    foundation: constrainedShuffle(exercises.filter(e => e.category === 'foundation').map(e => e.id), pairs),
-    movement: constrainedShuffle(exercises.filter(e => e.category === 'movement').map(e => e.id), pairs),
-    stretch: constrainedShuffle(exercises.filter(e => e.category === 'stretch').map(e => e.id), pairs),
+    foundation: shuffle(exercises.filter(e => e.category === 'foundation').map(e => e.id)),
+    movement: shuffle(exercises.filter(e => e.category === 'movement').map(e => e.id)),
+    stretch: shuffle(exercises.filter(e => e.category === 'stretch').map(e => e.id)),
   };
 }
 
@@ -476,7 +451,6 @@ function loadState() {
     if (!raw) return null;
     const s = JSON.parse(raw);
     if (!s.exercises) return null;
-    if (!s.avoidPairs) s.avoidPairs = [];
     return s;
   } catch { return null; }
 }
@@ -490,7 +464,7 @@ function createState(exercises) {
     version: 2, cycle: 1,
     exercises,
     order: buildOrder(exercises, []),
-    completed: {}, avoidPairs: [],
+    completed: {},
   };
 }
 
@@ -518,30 +492,30 @@ async function init() {
     const hasChanges = [...currentIds].some(id => !savedIds.has(id)) ||
       [...savedIds].some(id => !currentIds.has(id));
     if (!state.order || hasChanges) {
-      state.order = buildOrder(state.exercises, state.avoidPairs);
+      state.order = buildOrder(state.exercises, []);
     }
   }
   render();
 }
 
 // ── UI state ───────────────────────────────────────────────────────────────
-let activeTab = 'checklist';
 let checklistCat = 'foundation';
 let searchQ = '';
 let modal = null;
 let selectedFamily = null;
+let tagFilter = null;
 
-// Family icons mapping - SVG silhouettes
+// Family icons mapping - use image files from Icons folder
 const FAMILY_ICONS = {
-  'Supine': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="8" rx="5" ry="6"/><rect x="10" y="14" width="28" height="8" rx="3"/><rect x="6" y="22" width="8" height="4" rx="2"/><rect x="34" y="22" width="8" height="4" rx="2"/><rect x="14" y="22" width="6" height="12" rx="2"/><rect x="28" y="22" width="6" height="12" rx="2"/></svg>`,
-  'Side-lying': `<svg viewBox="0 0 48 48"><ellipse cx="30" cy="12" rx="5" ry="6"/><rect x="20" y="18" width="24" height="8" rx="3" transform="rotate(15 32 22)"/><rect x="12" y="28" width="8" height="4" rx="2" transform="rotate(15 16 30)"/><rect x="40" y="14" width="8" height="4" rx="2" transform="rotate(15 44 16)"/><rect x="24" y="26" width="6" height="12" rx="2" transform="rotate(15 27 32)"/><rect x="36" y="18" width="6" height="12" rx="2" transform="rotate(15 39 24)"/></svg>`,
-  'Prone': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="40" rx="5" ry="6"/><rect x="10" y="26" width="28" height="8" rx="3"/><rect x="6" y="22" width="8" height="4" rx="2"/><rect x="34" y="22" width="8" height="4" rx="2"/><rect x="14" y="14" width="6" height="12" rx="2"/><rect x="28" y="14" width="6" height="12" rx="2"/></svg>`,
-  'Sitting': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="10" rx="5" ry="6"/><rect x="18" y="16" width="12" height="14" rx="3"/><rect x="10" y="18" width="8" height="4" rx="2"/><rect x="30" y="18" width="8" height="4" rx="2"/><rect x="20" y="30" width="8" height="10" rx="2"/><rect x="14" y="38" width="20" height="4" rx="2"/></svg>`,
-  'Quadruped': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="14" rx="5" ry="6"/><rect x="18" y="20" width="12" height="12" rx="3"/><rect x="8" y="24" width="8" height="4" rx="2" transform="rotate(-30 12 26)"/><rect x="32" y="24" width="8" height="4" rx="2" transform="rotate(30 36 26)"/><rect x="16" y="32" width="6" height="10" rx="2" transform="rotate(-20 19 37)"/><rect x="26" y="32" width="6" height="10" rx="2" transform="rotate(20 29 37)"/></svg>`,
-  'Lunge': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="8" rx="5" ry="6"/><rect x="20" y="14" width="8" height="16" rx="3"/><rect x="10" y="16" width="8" height="4" rx="2"/><rect x="30" y="16" width="8" height="4" rx="2"/><rect x="18" y="30" width="6" height="12" rx="2" transform="rotate(-15 21 36)"/><rect x="26" y="28" width="8" height="14" rx="2" transform="rotate(25 30 35)"/></svg>`,
-  'Squat': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="12" rx="5" ry="6"/><rect x="18" y="18" width="12" height="14" rx="3"/><rect x="8" y="20" width="8" height="4" rx="2" transform="rotate(-20 12 22)"/><rect x="32" y="20" width="8" height="4" rx="2" transform="rotate(20 36 22)"/><rect x="16" y="32" width="6" height="10" rx="2" transform="rotate(-30 19 37)"/><rect x="26" y="32" width="6" height="10" rx="2" transform="rotate(30 29 37)"/></svg>`,
-  'Standing': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="8" rx="5" ry="6"/><rect x="20" y="14" width="8" height="18" rx="3"/><rect x="10" y="16" width="8" height="4" rx="2"/><rect x="30" y="16" width="8" height="4" rx="2"/><rect x="18" y="32" width="6" height="14" rx="2"/><rect x="24" y="32" width="6" height="14" rx="2"/></svg>`,
-  'Walking': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="8" rx="5" ry="6"/><rect x="20" y="14" width="8" height="18" rx="3" transform="rotate(5 24 23)"/><rect x="10" y="14" width="8" height="4" rx="2" transform="rotate(-15 14 16)"/><rect x="30" y="18" width="8" height="4" rx="2" transform="rotate(25 34 20)"/><rect x="16" y="30" width="6" height="14" rx="2" transform="rotate(-20 19 37)"/><rect x="26" y="34" width="6" height="14" rx="2" transform="rotate(15 29 41)"/></svg>`
+  'Supine': `<img src="Icons/Supine.png" alt="Supine">`,
+  'Side-lying': `<img src="Icons/Side_lying.jpg" alt="Side-lying">`,
+  'Prone': `<img src="Icons/Prone.jpg" alt="Prone">`,
+  'Sitting': `<img src="Icons/Sitting.jpg" alt="Sitting">`,
+  'Quadruped': `<img src="Icons/Quadruped.jpg" alt="Quadruped">`,
+  'Lunge': `<img src="Icons/Lunge.jpg" alt="Lunge">`,
+  'Squat': `<img src="Icons/Squat.jpg" alt="Squat">`,
+  'Standing': `<img src="Icons/Standing.jpg" alt="Standing">`,
+  'Walking': `<img src="Icons/Walking.jpg" alt="Walking">`
 };
 
 const FAMILY_NAMES = ['Supine', 'Side Lying', 'Prone', 'Sitting', 'Quadruped', 'Lunge', 'Squat', 'Standing', 'Walking & Favorites'];
@@ -572,40 +546,20 @@ function allDone() {
 // ── Render ─────────────────────────────────────────────────────────────────
 function render() {
   document.getElementById('cycle-pill').textContent = `cycle ${state.cycle}`;
-  ['checklist','settings'].forEach(t => {
-    const el = document.getElementById('nav-' + t);
-    if (el) el.classList.toggle('active', activeTab === t);
-  });
 
   const content = document.getElementById('content');
-  if (activeTab === 'checklist') {
-    content.innerHTML = renderChecklistShell();
-    // Set search value and attach listener — does NOT trigger re-render
-    const inp = document.getElementById('search-input');
-    if (inp) {
-      inp.value = searchQ;
-      inp.addEventListener('input', e => {
-        searchQ = e.target.value;
-        refreshList();
-      });
-    }
-    // Tag filter chips via event delegation
-    const filterBar = document.getElementById('filter-bar');
-    if (filterBar) {
-      filterBar.addEventListener('click', e => {
-        const chip = e.target.closest('.filter-chip');
-        if (!chip) return;
-        tagFilter = chip.dataset.tag === '__all__' ? null : chip.dataset.tag;
-        filterBar.querySelectorAll('.filter-chip').forEach(c =>
-          c.classList.toggle('active', c.dataset.tag === (tagFilter || '__all__'))
-        );
-        refreshList();
-      });
-    }
-    refreshList();
-  } else {
-    content.innerHTML = renderSettings();
+  content.innerHTML = renderChecklistShell();
+  
+  // Set search value and attach listener — does NOT trigger re-render
+  const inp = document.getElementById('search-input');
+  if (inp) {
+    inp.value = searchQ;
+    inp.addEventListener('input', e => {
+      searchQ = e.target.value;
+      refreshList();
+    });
   }
+  refreshList();
 
   document.getElementById('modal-container').innerHTML = modal ? renderModal() : '';
 }
@@ -678,12 +632,8 @@ function renderChecklistShell() {
   </div>
 
   <div class="toolbar">
-    <button class="btn primary" onclick="reshuffleAll()">↻ Reshuffle</button>
     <button id="next-cycle-btn" class="btn" onclick="nextCycle()" style="display:${allDone() ? 'inline-flex' : 'none'}">Next cycle →</button>
     <button class="btn" onclick="clearAll()">Clear</button>
-    <button class="btn primary" onclick="openAdd()">+ Add</button>
-    <button class="btn" onclick="exportData()">↓ Export</button>
-    <label class="btn" style="cursor:pointer">↑ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
   </div>
 
   <div class="section-header" style="margin-top:4px">
@@ -764,116 +714,13 @@ function renderExerciseList() {
           <span class="tag plain">${ex.subcategory}</span>
         </div>
       </div>
-      <div class="ex-actions">
-        <button class="icon-btn" onclick="openEdit('${ex.id}')" title="Edit">✎</button>
-      </div>
     </div>`;
   }).join('');
 }
 
-// ── Settings tab ───────────────────────────────────────────────────────────
-function renderSettings() {
-  const pairs = state.avoidPairs || [];
-  return `
-  <div class="section-header" style="margin-top:4px"><span class="section-label">Exercise list</span></div>
-  ${state.exercises.map(ex => {
-    const categoryLabel = ex.category.charAt(0).toUpperCase() + ex.category.slice(1);
-    return `<div class="ex-card">
-      <div class="ex-body">
-        <div class="ex-name">${esc(ex.name)}</div>
-        <div class="ex-tags">
-          <span class="tag ${ex.category}">${categoryLabel}</span>
-          <span class="tag plain">${normalizeFamilyName(ex.family)}</span>
-          <span class="tag plain">${ex.subcategory}</span>
-        </div>
-      </div>
-      <div class="ex-actions">
-        <button class="icon-btn" onclick="openEdit('${ex.id}')">✎</button>
-        <button class="icon-btn red" onclick="deleteEx('${ex.id}')">✕</button>
-      </div>
-    </div>`;
-  }).join('')}
-
-  <div class="section-header" style="margin-top:24px"><span class="section-label">Avoid pairs</span></div>
-  <div class="info-box">Exercises that should not appear back-to-back when shuffling.</div>
-  <button class="btn" onclick="openAvoid()" style="margin-bottom:12px">+ Add pair</button>
-  ${!pairs.length ? '<div class="empty" style="padding:20px 0">No avoid pairs set.</div>' :
-    pairs.map((p, i) => {
-      const a = exById(p.a), b = exById(p.b);
-      if (!a || !b) return '';
-      return `<div class="avoid-item">
-        <div class="avoid-names">${esc(a.name)}<span class="avoid-sep">↔</span>${esc(b.name)}</div>
-        <button class="icon-btn red" onclick="removeAvoid(${i})">✕</button>
-      </div>`;
-    }).join('')}
-
-  <div class="section-header" style="margin-top:24px"><span class="section-label">Data</span></div>
-  <div class="info-box">Reset clears all progress and restores the default exercise list from <code>exercises.json</code>.</div>
-  <div class="toolbar">
-    <button class="btn danger" onclick="resetApp()">Reset to defaults</button>
-  </div>`;
-}
 
 // ── Modal ──────────────────────────────────────────────────────────────────
 function renderModal() {
-  if (modal.type === 'edit' || modal.type === 'add') {
-    const ex = modal.ex;
-    return `<div class="modal-bg" id="modal-bg">
-    <div class="modal">
-      <div class="modal-handle"></div>
-      <h2>${modal.type === 'add' ? 'Add exercise' : 'Edit exercise'}</h2>
-      <div class="field"><label>Name</label>
-        <input id="m-name" value="${esc(ex.name || '')}" placeholder="Exercise name">
-      </div>
-      <div class="field"><label>Category</label>
-        <select id="m-cat">
-          <option value="foundation" ${ex.category === 'foundation' ? 'selected' : ''}>Foundation</option>
-          <option value="movement" ${ex.category === 'movement' ? 'selected' : ''}>Movement</option>
-          <option value="stretch" ${ex.category === 'stretch' ? 'selected' : ''}>Stretch</option>
-        </select>
-      </div>
-      <div class="field"><label>Family</label>
-        <select id="m-family">
-          ${FAMILY_NAMES.map(f => `<option value="${f}" ${ex.family === f ? 'selected' : ''}>${f}</option>`).join('')}
-        </select>
-      </div>
-      <div class="field"><label>Subcategory</label>
-        <select id="m-subcategory">
-          <option value="Foundation" ${ex.subcategory === 'Foundation' ? 'selected' : ''}>Foundation</option>
-          <option value="Movement" ${ex.subcategory === 'Movement' ? 'selected' : ''}>Movement</option>
-          <option value="Stretch" ${ex.subcategory === 'Stretch' ? 'selected' : ''}>Stretch</option>
-        </select>
-      </div>
-      <div class="field"><label>Notes / form cues</label>
-        <textarea id="m-notes" placeholder="Form cues, reps, duration...">${esc(ex.notes || '')}</textarea>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeModal()">Cancel</button>
-        <button class="btn primary" onclick="saveEx()">Save</button>
-      </div>
-    </div></div>`;
-  }
-  if (modal.type === 'avoid') {
-    return `<div class="modal-bg" id="modal-bg">
-    <div class="modal">
-      <div class="modal-handle"></div>
-      <h2>Add avoid pair</h2>
-      <div class="field"><label>First exercise</label>
-        <select id="av-a"><option value="">Select...</option>
-          ${state.exercises.map(e => `<option value="${e.id}">${esc(e.name)}</option>`).join('')}
-        </select>
-      </div>
-      <div class="field"><label>Second exercise</label>
-        <select id="av-b"><option value="">Select...</option>
-          ${state.exercises.map(e => `<option value="${e.id}">${esc(e.name)}</option>`).join('')}
-        </select>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeModal()">Cancel</button>
-        <button class="btn primary" onclick="saveAvoid()">Add pair</button>
-      </div>
-    </div></div>`;
-  }
   return '';
 }
 
@@ -884,8 +731,6 @@ function showModal() {
 }
 
 // ── Actions ────────────────────────────────────────────────────────────────
-window.setTab = t => { activeTab = t; searchQ = ''; tagFilter = null; selectedFamily = null; render(); };
-
 window.selectFamily = family => {
   selectedFamily = family;
   render();
@@ -907,107 +752,20 @@ window.toggleDone = id => {
 
 window.clearAll = () => { state.completed = {}; saveState(); refreshList(); };
 
-window.reshuffleAll = () => {
-  state.order = buildOrder(state.exercises, state.avoidPairs);
-  state.completed = {}; saveState(); render();
-};
 
 window.nextCycle = () => {
   state.cycle++;
-  state.order = buildOrder(state.exercises, state.avoidPairs);
+  state.order = buildOrder(state.exercises, []);
   state.completed = {}; saveState(); render();
 };
 
 
-window.deleteEx = id => {
-  if (!confirm('Delete this exercise?')) return;
-  state.exercises = state.exercises.filter(e => e.id !== id);
-  state.order = buildOrder(state.exercises, state.avoidPairs);
-  saveState(); render();
-};
 
 window.closeModal = () => {
   modal = null;
   document.getElementById('modal-container').innerHTML = '';
 };
 
-window.openAdd = () => {
-  modal = { type: 'add', ex: { category: 'foundation', family: FAMILY_NAMES[0], subcategory: 'Foundation', name: '', notes: '' } };
-  showModal();
-};
-
-window.openEdit = id => {
-  const ex = exById(id); if (!ex) return;
-  modal = { type: 'edit', ex: { ...ex } };
-  showModal();
-};
-
-window.openAvoid = () => { modal = { type: 'avoid' }; showModal(); };
-
-
-window.saveEx = () => {
-  const name = document.getElementById('m-name').value.trim();
-  if (!name) { alert('Name is required.'); return; }
-  const cat = document.getElementById('m-cat').value;
-  const family = document.getElementById('m-family').value;
-  const subcategory = document.getElementById('m-subcategory').value;
-  const notes = document.getElementById('m-notes').value.trim();
-  if (modal.type === 'add') {
-    state.exercises.push({ id: uid(), name, category: cat, family, subcategory, notes });
-  } else {
-    const ex = exById(modal.ex.id);
-    if (ex) Object.assign(ex, { name, category: cat, family, subcategory, notes });
-  }
-  state.order = buildOrder(state.exercises, state.avoidPairs);
-  modal = null; saveState(); render();
-};
-
-window.saveAvoid = () => {
-  const a = document.getElementById('av-a').value;
-  const b = document.getElementById('av-b').value;
-  if (!a || !b || a === b) { alert('Select two different exercises.'); return; }
-  if (!state.avoidPairs.some(p => (p.a === a && p.b === b) || (p.a === b && p.b === a)))
-    state.avoidPairs.push({ a, b });
-  modal = null; saveState(); render();
-};
-
-window.removeAvoid = i => { state.avoidPairs.splice(i, 1); saveState(); render(); };
-
-
-window.exportData = () => {
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'p3-protocol-backup.json';
-  a.click();
-};
-
-window.importData = e => {
-  const file = e.target.files[0]; if (!file) return;
-  const r = new FileReader();
-  r.onload = ev => {
-    try {
-      const d = JSON.parse(ev.target.result);
-      if (!d.exercises) { alert('Invalid backup file.'); return; }
-      state = d;
-      if (!state.avoidPairs) state.avoidPairs = [];
-      // Migrate old format if needed
-      if (state.exercises[0] && state.exercises[0].tags) {
-        state.exercises = state.exercises.map(ex => ({
-          id: ex.id,
-          name: ex.name,
-          category: ex.category,
-          family: ex.tags && ex.tags[0] || 'Standing',
-          subcategory: ex.category === 'foundation' ? 'Foundation' : 'Stretch',
-          notes: ex.notes || ''
-        }));
-      }
-      state.order = buildOrder(state.exercises, state.avoidPairs);
-      saveState(); render(); alert('Imported successfully.');
-    } catch { alert('Invalid JSON file.'); }
-  };
-  r.readAsText(file);
-};
 
 window.resetApp = async () => {
   if (!confirm('Reset everything? This clears all progress and reloads defaults.')) return;
