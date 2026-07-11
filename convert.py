@@ -83,31 +83,9 @@ def map_subcategory_to_category(subcategory):
     sub_lower = subcategory.lower()
     if sub_lower == 'stretch':
         return 'stretch'
-    return 'foundation'  # foundation and movement both map to foundation
-
-def generate_tags(movement, subcategory):
-    """Generate tags based on movement family and subcategory"""
-    # Convert movement names to match original tag format
-    movement_map = {
-        'Side Lying': 'Side-lying',
-        'Squat': 'Squat',
-        'Supine': 'Supine',
-        'Prone': 'Prone',
-        'Lunge': 'Lunge',
-        'Standing': 'Standing',
-        'Sitting': 'Sitting',
-        'Quadruped': 'Quadruped',
-        'Walking & Favorites': 'Walking'
-    }
-    
-    tags = [movement_map.get(movement, movement)]
-    
-    # Only add Locomotion tag for movement subcategory
-    sub_lower = subcategory.lower()
-    if sub_lower == 'movement':
-        tags.append('Locomotion')
-    
-    return tags
+    elif sub_lower == 'movement':
+        return 'movement'
+    return 'foundation'
 
 # Read YAML file
 with open('./exercises.yaml', 'r') as f:
@@ -124,8 +102,8 @@ for movement, subcategories in data.items():
             exercises.append({
                 'name': exercise['name'],
                 'category': map_subcategory_to_category(subcategory),
-                'enabled': True,
-                'tags': generate_tags(movement, subcategory),
+                'family': movement,
+                'subcategory': subcategory,
                 'notes': exercise.get('notes', '')
             })
 

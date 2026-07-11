@@ -27,8 +27,9 @@
   --blue: #1a4a7a;
   --blue-bg: #e8f0f8;
   --blue-border: #a8c0dc;
-  --red: #8b2020;
-  --red-bg: #faeaea;
+  --red: #c53030;
+  --red-bg: #fed7d7;
+  --red-border: #feb2b2;
   --accent: #3d3a35;
   --radius: 10px;
   --radius-lg: 14px;
@@ -164,6 +165,7 @@ body {
 
 .tag { font-size: 10px; padding: 2px 7px; border-radius: 20px; font-family: var(--mono); }
 .tag.foundation { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.tag.movement { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
 .tag.stretch { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
 .tag.plain { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
 .tag.disabled { background: var(--red-bg); color: var(--red); border: 1px solid #e0a0a0; }
@@ -280,6 +282,103 @@ body {
   font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 14px;
 }
 .info-box code { font-family: var(--mono); font-size: 12px; background: var(--border); padding: 1px 5px; border-radius: 4px; color: var(--text); }
+
+/* Family tiles grid */
+.family-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+@media (min-width: 400px) {
+  .family-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.family-tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.family-tile:hover {
+  border-color: var(--text);
+  transform: translateY(-2px);
+}
+.family-tile.selected {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+.family-tile.selected .family-icon,
+.family-tile.selected .family-name,
+.family-tile.selected .family-progress {
+  color: var(--bg);
+}
+.family-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 8px;
+  color: var(--text);
+}
+.family-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.family-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.family-progress {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+.family-tile.selected .family-progress {
+  color: rgba(255,255,255,0.7);
+}
+.family-tile .progress-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--surface2);
+  margin: 0 2px;
+}
+.family-tile.selected .progress-dot {
+  background: rgba(255,255,255,0.3);
+}
+.family-tile .progress-dot.done {
+  background: var(--green);
+}
+.family-tile.selected .progress-dot.done {
+  background: #4ade80;
+}
+
+/* Back button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: background 0.1s;
+}
+.back-btn:active { background: var(--surface2); }
 </style>
 </head>
 <body>
@@ -311,7 +410,6 @@ body {
 
 <script>
 const STORAGE_KEY = 'p3-protocol-v1';
-const DEFAULT_TAGS = ['Supine','Squat','Prone','Side-lying','Lunge','Standing','Sitting','Quadruped','Walking','Locomotion'];
 
 // ── Utils ──────────────────────────────────────────────────────────────────
 function uid() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
@@ -333,9 +431,7 @@ function sharePositionTag(idA, idB) {
   if (!state) return false;
   const a = exById(idA), b = exById(idB);
   if (!a || !b) return false;
-  const tagsA = a.tags.filter(t => t !== 'Locomotion');
-  const tagsB = b.tags.filter(t => t !== 'Locomotion');
-  return tagsA.some(t => tagsB.includes(t));
+  return a.family === b.family;
 }
 
 function constrainedShuffle(ids, pairs) {
@@ -360,10 +456,10 @@ function constrainedShuffle(ids, pairs) {
 }
 
 function buildOrder(exercises, pairs) {
-  const en = exercises.filter(e => e.enabled);
   return {
-    foundation: constrainedShuffle(en.filter(e => e.category === 'foundation').map(e => e.id), pairs),
-    stretch: constrainedShuffle(en.filter(e => e.category === 'stretch').map(e => e.id), pairs),
+    foundation: constrainedShuffle(exercises.filter(e => e.category === 'foundation').map(e => e.id), pairs),
+    movement: constrainedShuffle(exercises.filter(e => e.category === 'movement').map(e => e.id), pairs),
+    stretch: constrainedShuffle(exercises.filter(e => e.category === 'stretch').map(e => e.id), pairs),
   };
 }
 
@@ -381,7 +477,6 @@ function loadState() {
     const s = JSON.parse(raw);
     if (!s.exercises) return null;
     if (!s.avoidPairs) s.avoidPairs = [];
-    if (!s.tagSuggestions || !s.tagSuggestions.length) s.tagSuggestions = DEFAULT_TAGS;
     return s;
   } catch { return null; }
 }
@@ -392,11 +487,10 @@ function saveState() {
 
 function createState(exercises) {
   return {
-    version: 1, cycle: 1,
+    version: 2, cycle: 1,
     exercises,
     order: buildOrder(exercises, []),
     completed: {}, avoidPairs: [],
-    tagSuggestions: DEFAULT_TAGS,
   };
 }
 
@@ -418,11 +512,11 @@ async function init() {
     }
     saveState();
   } else {
-    // Only rebuild order if the set of enabled exercises has changed, not on every load
-    const savedIds = new Set([...(state.order.foundation || []), ...(state.order.stretch || [])]);
-    const enabledIds = new Set(state.exercises.filter(e => e.enabled).map(e => e.id));
-    const hasChanges = [...enabledIds].some(id => !savedIds.has(id)) ||
-      [...savedIds].some(id => !enabledIds.has(id));
+    // Rebuild order if exercise structure has changed
+    const savedIds = new Set([...(state.order.foundation || []), ...(state.order.movement || []), ...(state.order.stretch || [])]);
+    const currentIds = new Set(state.exercises.map(e => e.id));
+    const hasChanges = [...currentIds].some(id => !savedIds.has(id)) ||
+      [...savedIds].some(id => !currentIds.has(id));
     if (!state.order || hasChanges) {
       state.order = buildOrder(state.exercises, state.avoidPairs);
     }
@@ -434,21 +528,45 @@ async function init() {
 let activeTab = 'checklist';
 let checklistCat = 'foundation';
 let searchQ = '';
-let tagFilter = null;
-let showDisabled = false;
 let modal = null;
+let selectedFamily = null;
+
+// Family icons mapping - SVG silhouettes
+const FAMILY_ICONS = {
+  'Supine': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="8" rx="5" ry="6"/><rect x="10" y="14" width="28" height="8" rx="3"/><rect x="6" y="22" width="8" height="4" rx="2"/><rect x="34" y="22" width="8" height="4" rx="2"/><rect x="14" y="22" width="6" height="12" rx="2"/><rect x="28" y="22" width="6" height="12" rx="2"/></svg>`,
+  'Side-lying': `<svg viewBox="0 0 48 48"><ellipse cx="30" cy="12" rx="5" ry="6"/><rect x="20" y="18" width="24" height="8" rx="3" transform="rotate(15 32 22)"/><rect x="12" y="28" width="8" height="4" rx="2" transform="rotate(15 16 30)"/><rect x="40" y="14" width="8" height="4" rx="2" transform="rotate(15 44 16)"/><rect x="24" y="26" width="6" height="12" rx="2" transform="rotate(15 27 32)"/><rect x="36" y="18" width="6" height="12" rx="2" transform="rotate(15 39 24)"/></svg>`,
+  'Prone': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="40" rx="5" ry="6"/><rect x="10" y="26" width="28" height="8" rx="3"/><rect x="6" y="22" width="8" height="4" rx="2"/><rect x="34" y="22" width="8" height="4" rx="2"/><rect x="14" y="14" width="6" height="12" rx="2"/><rect x="28" y="14" width="6" height="12" rx="2"/></svg>`,
+  'Sitting': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="10" rx="5" ry="6"/><rect x="18" y="16" width="12" height="14" rx="3"/><rect x="10" y="18" width="8" height="4" rx="2"/><rect x="30" y="18" width="8" height="4" rx="2"/><rect x="20" y="30" width="8" height="10" rx="2"/><rect x="14" y="38" width="20" height="4" rx="2"/></svg>`,
+  'Quadruped': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="14" rx="5" ry="6"/><rect x="18" y="20" width="12" height="12" rx="3"/><rect x="8" y="24" width="8" height="4" rx="2" transform="rotate(-30 12 26)"/><rect x="32" y="24" width="8" height="4" rx="2" transform="rotate(30 36 26)"/><rect x="16" y="32" width="6" height="10" rx="2" transform="rotate(-20 19 37)"/><rect x="26" y="32" width="6" height="10" rx="2" transform="rotate(20 29 37)"/></svg>`,
+  'Lunge': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="8" rx="5" ry="6"/><rect x="20" y="14" width="8" height="16" rx="3"/><rect x="10" y="16" width="8" height="4" rx="2"/><rect x="30" y="16" width="8" height="4" rx="2"/><rect x="18" y="30" width="6" height="12" rx="2" transform="rotate(-15 21 36)"/><rect x="26" y="28" width="8" height="14" rx="2" transform="rotate(25 30 35)"/></svg>`,
+  'Squat': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="12" rx="5" ry="6"/><rect x="18" y="18" width="12" height="14" rx="3"/><rect x="8" y="20" width="8" height="4" rx="2" transform="rotate(-20 12 22)"/><rect x="32" y="20" width="8" height="4" rx="2" transform="rotate(20 36 22)"/><rect x="16" y="32" width="6" height="10" rx="2" transform="rotate(-30 19 37)"/><rect x="26" y="32" width="6" height="10" rx="2" transform="rotate(30 29 37)"/></svg>`,
+  'Standing': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="8" rx="5" ry="6"/><rect x="20" y="14" width="8" height="18" rx="3"/><rect x="10" y="16" width="8" height="4" rx="2"/><rect x="30" y="16" width="8" height="4" rx="2"/><rect x="18" y="32" width="6" height="14" rx="2"/><rect x="24" y="32" width="6" height="14" rx="2"/></svg>`,
+  'Walking': `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="8" rx="5" ry="6"/><rect x="20" y="14" width="8" height="18" rx="3" transform="rotate(5 24 23)"/><rect x="10" y="14" width="8" height="4" rx="2" transform="rotate(-15 14 16)"/><rect x="30" y="18" width="8" height="4" rx="2" transform="rotate(25 34 20)"/><rect x="16" y="30" width="6" height="14" rx="2" transform="rotate(-20 19 37)"/><rect x="26" y="34" width="6" height="14" rx="2" transform="rotate(15 29 41)"/></svg>`
+};
+
+const FAMILY_NAMES = ['Supine', 'Side Lying', 'Prone', 'Sitting', 'Quadruped', 'Lunge', 'Squat', 'Standing', 'Walking & Favorites'];
+
+const FAMILY_DISPLAY_NAMES = {
+  'Side Lying': 'Side-lying',
+  'Walking & Favorites': 'Walking'
+};
+
+function normalizeFamilyName(family) {
+  return FAMILY_DISPLAY_NAMES[family] || family;
+}
 
 // ── Counts ─────────────────────────────────────────────────────────────────
 function countDone(cat) {
   return (state.order[cat] || []).filter(id => state.completed[id]).length;
 }
 function countTotal(cat) {
-  return (state.order[cat] || []).filter(id => { const e = exById(id); return e && e.enabled; }).length;
+  return (state.order[cat] || []).length;
 }
 function allDone() {
   return countDone('foundation') === countTotal('foundation') &&
+    countDone('movement') === countTotal('movement') &&
     countDone('stretch') === countTotal('stretch') &&
-    countTotal('foundation') + countTotal('stretch') > 0;
+    countTotal('foundation') + countTotal('movement') + countTotal('stretch') > 0;
 }
 
 // ── Render ─────────────────────────────────────────────────────────────────
@@ -523,17 +641,40 @@ function refreshList() {
 // ── Checklist shell (rendered once per tab switch) ─────────────────────────
 function renderChecklistShell() {
   const doneF = countDone('foundation'), totF = countTotal('foundation');
+  const doneM = countDone('movement'), totM = countTotal('movement');
   const doneS = countDone('stretch'), totS = countTotal('stretch');
-  const allTags = [...new Set(state.exercises.flatMap(e => e.tags))].sort();
   const cat = checklistCat;
-  const d = cat === 'foundation' ? doneF : doneS;
-  const t = cat === 'foundation' ? totF : totS;
-  const pct = t > 0 ? Math.round(d / t * 100) : 0;
+  const pct = 0; // Not used in family view
 
+  // If a family is selected, show family view
+  if (selectedFamily) {
+    const familyExercises = state.exercises.filter(e => 
+      e.family === selectedFamily
+    );
+    const familyDone = familyExercises.filter(e => state.completed[e.id]).length;
+    const familyTotal = familyExercises.length;
+    const familyPct = familyTotal > 0 ? Math.round(familyDone / familyTotal * 100) : 0;
+
+    return `
+  <button class="back-btn" onclick="selectFamily(null)">← Back to all families</button>
+
+  <div class="section-header">
+    <span class="section-label">${normalizeFamilyName(selectedFamily)}</span>
+    <span class="section-count">${familyDone}/${familyTotal}</span>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:${familyPct}%"></div></div>
+  </div>
+
+  <div id="exercise-list"></div>`;
+  }
+
+  // Show family selection grid
   return `
   <div id="complete-banner" class="complete-banner" style="display:${allDone() ? 'block' : 'none'}">
     <strong>Session complete!</strong>
-    <small>Cycle ${state.cycle} done — ${totF + totS} exercises</small>
+    <small>Cycle ${state.cycle} done — ${totF + totM + totS} exercises</small>
   </div>
 
   <div class="toolbar">
@@ -545,43 +686,65 @@ function renderChecklistShell() {
     <label class="btn" style="cursor:pointer">↑ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
   </div>
 
-  <div class="cat-tabs">
-    <button id="cat-tab-foundation" class="cat-tab ${checklistCat === 'foundation' ? 'active' : ''}" onclick="setChecklistCat('foundation')">
-      Restoration · Foundation <span class="tab-count" style="font-family:var(--mono);font-size:11px;opacity:0.7">${doneF}/${totF}</span>
-    </button>
-    <button id="cat-tab-stretch" class="cat-tab ${checklistCat === 'stretch' ? 'active' : ''}" onclick="setChecklistCat('stretch')">
-      Stretch <span class="tab-count" style="font-family:var(--mono);font-size:11px;opacity:0.7">${doneS}/${totS}</span>
-    </button>
+  <div class="section-header" style="margin-top:4px">
+    <span class="section-label">Movement Families</span>
+    <span class="section-count">${doneF + doneM + doneS}/${totF + totM + totS} total</span>
   </div>
 
-  <div class="search-wrap">
-    <span class="search-icon">⌕</span>
-    <input id="search-input" class="search" type="search" placeholder="Search..." autocomplete="off" autocorrect="off" spellcheck="false">
+  <div class="family-grid">
+    ${FAMILY_NAMES.map(family => {
+      const familyExercises = state.exercises.filter(e => e.family === family);
+      const doneCount = familyExercises.filter(e => state.completed[e.id]).length;
+      const totalCount = familyExercises.length;
+      const icon = FAMILY_ICONS[normalizeFamilyName(family)] || FAMILY_ICONS['Standing'];
+      
+      // Create progress dots
+      const dots = Array(totalCount).fill(0).map((_, i) => 
+        `<span class="progress-dot ${i < doneCount ? 'done' : ''}"></span>`
+      ).join('');
+      
+      return `<div class="family-tile" onclick="selectFamily('${esc(family)}')">
+        <div class="family-icon">${icon}</div>
+        <div class="family-name">${normalizeFamilyName(family)}</div>
+        <div class="family-progress">${doneCount}/${totalCount}</div>
+        <div class="family-progress" style="margin-top:4px">${dots}</div>
+      </div>`;
+    }).join('')}
   </div>
 
-  <div class="filter-bar" id="filter-bar">
-    <span class="filter-chip chip ${tagFilter === null ? 'active' : ''}" data-tag="__all__">All</span>
-    ${allTags.map(t => `<span class="filter-chip chip ${tagFilter === t ? 'active' : ''}" data-tag="${esc(t)}">${esc(t)}</span>`).join('')}
+  <div class="section-header" style="margin-top:20px">
+    <span class="section-label">Quick Stats</span>
   </div>
-
-  <div class="progress-wrap">
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:${pct}%"></div></div>
-  </div>
-
-  <div id="exercise-list"></div>`;
+  <div class="info-box">
+    <strong>Foundation:</strong> ${doneF}/${totF} completed<br>
+    <strong>Movement:</strong> ${doneM}/${totM} completed<br>
+    <strong>Stretch:</strong> ${doneS}/${totS} completed
+  </div>`;
 }
 
 function filteredList(cat) {
+  // If a family is selected, show all exercises for that family regardless of category
+  if (selectedFamily) {
+    let base = state.exercises.filter(e => e.family === selectedFamily);
+    if (searchQ) {
+      const q = searchQ.toLowerCase();
+      base = base.filter(e => e.name.toLowerCase().includes(q) || e.notes.toLowerCase().includes(q));
+    }
+    return base;
+  }
+  
+  // If no family selected, use the original ordering logic
+  let base = state.exercises.filter(e => e.category === cat);
   const inOrder = new Set(state.order[cat] || []);
   const ordered = (state.order[cat] || []).map(id => exById(id)).filter(Boolean);
   const extra = state.exercises.filter(e => e.category === cat && !inOrder.has(e.id));
-  let all = [...ordered, ...extra].filter(e => e.enabled);
-  if (tagFilter) all = all.filter(e => e.tags.includes(tagFilter));
+  base = [...ordered, ...extra];
+  
   if (searchQ) {
     const q = searchQ.toLowerCase();
-    all = all.filter(e => e.name.toLowerCase().includes(q) || e.notes.toLowerCase().includes(q));
+    base = base.filter(e => e.name.toLowerCase().includes(q) || e.notes.toLowerCase().includes(q));
   }
-  return all;
+  return base;
 }
 
 function renderExerciseList() {
@@ -589,14 +752,16 @@ function renderExerciseList() {
   if (!list.length) return `<div class="empty">No exercises match.</div>`;
   return list.map(ex => {
     const done = !!state.completed[ex.id];
+    const categoryLabel = ex.category.charAt(0).toUpperCase() + ex.category.slice(1);
     return `<div class="ex-card ${done ? 'done' : ''}">
       <div class="check ${done ? 'checked' : ''}" onclick="toggleDone('${ex.id}')">${done ? '✓' : ''}</div>
       <div class="ex-body">
         <div class="ex-name ${done ? 'done' : ''}">${esc(ex.name)}</div>
         ${ex.notes ? `<div class="ex-notes">${esc(ex.notes)}</div>` : ''}
         <div class="ex-tags">
-          <span class="tag ${ex.category}">${ex.category === 'foundation' ? 'Foundation' : 'Stretch'}</span>
-          ${ex.tags.map(t => `<span class="tag plain">${esc(t)}</span>`).join('')}
+          <span class="tag ${ex.category}">${categoryLabel}</span>
+          <span class="tag plain">${normalizeFamilyName(ex.family)}</span>
+          <span class="tag plain">${ex.subcategory}</span>
         </div>
       </div>
       <div class="ex-actions">
@@ -611,26 +776,23 @@ function renderSettings() {
   const pairs = state.avoidPairs || [];
   return `
   <div class="section-header" style="margin-top:4px"><span class="section-label">Exercise list</span></div>
-  <div class="info-box">Enable or disable exercises. Disabled ones stay in your database but are excluded from the workout shuffle.</div>
-  <div class="toolbar" style="margin-bottom:16px">
-    <button class="btn" onclick="toggleShowDisabled()">${showDisabled ? 'Hide disabled' : 'Show disabled'}</button>
-  </div>
-  ${state.exercises.map(ex => `
-    <div class="ex-card ${!ex.enabled ? 'disabled-ex' : ''}">
+  ${state.exercises.map(ex => {
+    const categoryLabel = ex.category.charAt(0).toUpperCase() + ex.category.slice(1);
+    return `<div class="ex-card">
       <div class="ex-body">
         <div class="ex-name">${esc(ex.name)}</div>
         <div class="ex-tags">
-          <span class="tag ${ex.category}">${ex.category === 'foundation' ? 'Foundation' : 'Stretch'}</span>
-          ${ex.tags.map(t => `<span class="tag plain">${esc(t)}</span>`).join('')}
-          ${!ex.enabled ? `<span class="tag disabled">disabled</span>` : ''}
+          <span class="tag ${ex.category}">${categoryLabel}</span>
+          <span class="tag plain">${normalizeFamilyName(ex.family)}</span>
+          <span class="tag plain">${ex.subcategory}</span>
         </div>
       </div>
       <div class="ex-actions">
-        <button class="icon-btn" onclick="toggleEnabled('${ex.id}')" title="${ex.enabled ? 'Disable' : 'Enable'}">${ex.enabled ? '○' : '●'}</button>
         <button class="icon-btn" onclick="openEdit('${ex.id}')">✎</button>
         <button class="icon-btn red" onclick="deleteEx('${ex.id}')">✕</button>
       </div>
-    </div>`).join('')}
+    </div>`;
+  }).join('')}
 
   <div class="section-header" style="margin-top:24px"><span class="section-label">Avoid pairs</span></div>
   <div class="info-box">Exercises that should not appear back-to-back when shuffling.</div>
@@ -645,10 +807,6 @@ function renderSettings() {
       </div>`;
     }).join('')}
 
-  <div class="section-header" style="margin-top:24px"><span class="section-label">Tag suggestions</span></div>
-  <div class="info-box">Comma-separated. These appear as quick-add chips when editing exercises.</div>
-  <textarea style="width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--bg);font-family:var(--sans);font-size:14px;color:var(--text);min-height:80px;outline:none" oninput="updateTagSuggestions(this.value)">${esc(state.tagSuggestions.join(', '))}</textarea>
-
   <div class="section-header" style="margin-top:24px"><span class="section-label">Data</span></div>
   <div class="info-box">Reset clears all progress and restores the default exercise list from <code>exercises.json</code>.</div>
   <div class="toolbar">
@@ -660,7 +818,6 @@ function renderSettings() {
 function renderModal() {
   if (modal.type === 'edit' || modal.type === 'add') {
     const ex = modal.ex;
-    const tags = ex.tags || [];
     return `<div class="modal-bg" id="modal-bg">
     <div class="modal">
       <div class="modal-handle"></div>
@@ -670,26 +827,25 @@ function renderModal() {
       </div>
       <div class="field"><label>Category</label>
         <select id="m-cat">
-          <option value="foundation" ${ex.category !== 'stretch' ? 'selected' : ''}>Restoration / Foundation</option>
+          <option value="foundation" ${ex.category === 'foundation' ? 'selected' : ''}>Foundation</option>
+          <option value="movement" ${ex.category === 'movement' ? 'selected' : ''}>Movement</option>
           <option value="stretch" ${ex.category === 'stretch' ? 'selected' : ''}>Stretch</option>
         </select>
       </div>
-      <div class="field">
-        <label>Tags</label>
-        <div class="tag-chips">${state.tagSuggestions.map(t =>
-          `<span class="tag-chip ${tags.includes(t) ? 'on' : ''}" onclick="toggleTag('${esc(t)}')">${esc(t)}</span>`
-        ).join('')}</div>
-        <input id="m-tags" style="margin-top:8px;width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--bg);font-family:var(--sans);font-size:14px;color:var(--text);outline:none" placeholder="Custom tags, comma-separated" value="${esc(tags.join(', '))}">
+      <div class="field"><label>Family</label>
+        <select id="m-family">
+          ${FAMILY_NAMES.map(f => `<option value="${f}" ${ex.family === f ? 'selected' : ''}>${f}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>Subcategory</label>
+        <select id="m-subcategory">
+          <option value="Foundation" ${ex.subcategory === 'Foundation' ? 'selected' : ''}>Foundation</option>
+          <option value="Movement" ${ex.subcategory === 'Movement' ? 'selected' : ''}>Movement</option>
+          <option value="Stretch" ${ex.subcategory === 'Stretch' ? 'selected' : ''}>Stretch</option>
+        </select>
       </div>
       <div class="field"><label>Notes / form cues</label>
         <textarea id="m-notes" placeholder="Form cues, reps, duration...">${esc(ex.notes || '')}</textarea>
-      </div>
-      <div class="field">
-        <label>Include in rotation</label>
-        <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
-          <button class="toggle ${ex.enabled !== false ? 'on' : ''}" id="m-toggle" onclick="flipEnabled()"></button>
-          <span id="m-toggle-label" style="font-size:13px;color:var(--text2)">${ex.enabled !== false ? 'Included' : 'Excluded'}</span>
-        </div>
       </div>
       <div class="modal-footer">
         <button class="btn" onclick="closeModal()">Cancel</button>
@@ -698,19 +854,18 @@ function renderModal() {
     </div></div>`;
   }
   if (modal.type === 'avoid') {
-    const en = state.exercises.filter(e => e.enabled);
     return `<div class="modal-bg" id="modal-bg">
     <div class="modal">
       <div class="modal-handle"></div>
       <h2>Add avoid pair</h2>
       <div class="field"><label>First exercise</label>
         <select id="av-a"><option value="">Select...</option>
-          ${en.map(e => `<option value="${e.id}">${esc(e.name)}</option>`).join('')}
+          ${state.exercises.map(e => `<option value="${e.id}">${esc(e.name)}</option>`).join('')}
         </select>
       </div>
       <div class="field"><label>Second exercise</label>
         <select id="av-b"><option value="">Select...</option>
-          ${en.map(e => `<option value="${e.id}">${esc(e.name)}</option>`).join('')}
+          ${state.exercises.map(e => `<option value="${e.id}">${esc(e.name)}</option>`).join('')}
         </select>
       </div>
       <div class="modal-footer">
@@ -729,7 +884,12 @@ function showModal() {
 }
 
 // ── Actions ────────────────────────────────────────────────────────────────
-window.setTab = t => { activeTab = t; searchQ = ''; tagFilter = null; render(); };
+window.setTab = t => { activeTab = t; searchQ = ''; tagFilter = null; selectedFamily = null; render(); };
+
+window.selectFamily = family => {
+  selectedFamily = family;
+  render();
+};
 
 window.setChecklistCat = t => {
   checklistCat = t;
@@ -758,14 +918,6 @@ window.nextCycle = () => {
   state.completed = {}; saveState(); render();
 };
 
-window.toggleEnabled = id => {
-  const ex = exById(id); if (!ex) return;
-  ex.enabled = !ex.enabled;
-  state.order = buildOrder(state.exercises, state.avoidPairs);
-  saveState(); render();
-};
-
-window.toggleShowDisabled = () => { showDisabled = !showDisabled; render(); };
 
 window.deleteEx = id => {
   if (!confirm('Delete this exercise?')) return;
@@ -780,46 +932,31 @@ window.closeModal = () => {
 };
 
 window.openAdd = () => {
-  modal = { type: 'add', ex: { category: checklistCat, enabled: true, tags: [], name: '', notes: '' } };
+  modal = { type: 'add', ex: { category: 'foundation', family: FAMILY_NAMES[0], subcategory: 'Foundation', name: '', notes: '' } };
   showModal();
 };
 
 window.openEdit = id => {
   const ex = exById(id); if (!ex) return;
-  modal = { type: 'edit', ex: { ...ex, tags: [...ex.tags] } };
+  modal = { type: 'edit', ex: { ...ex } };
   showModal();
 };
 
 window.openAvoid = () => { modal = { type: 'avoid' }; showModal(); };
 
-window.flipEnabled = () => {
-  modal.ex.enabled = !modal.ex.enabled;
-  document.getElementById('m-toggle').classList.toggle('on', modal.ex.enabled);
-  document.getElementById('m-toggle-label').textContent = modal.ex.enabled ? 'Included' : 'Excluded';
-};
-
-window.toggleTag = t => {
-  const tags = modal.ex.tags;
-  const i = tags.indexOf(t);
-  if (i >= 0) tags.splice(i, 1); else tags.push(t);
-  document.getElementById('m-tags').value = tags.join(', ');
-  document.querySelectorAll('.tag-chip').forEach(c => {
-    if (c.textContent === t) c.classList.toggle('on', tags.includes(t));
-  });
-};
 
 window.saveEx = () => {
   const name = document.getElementById('m-name').value.trim();
   if (!name) { alert('Name is required.'); return; }
   const cat = document.getElementById('m-cat').value;
-  const tags = document.getElementById('m-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+  const family = document.getElementById('m-family').value;
+  const subcategory = document.getElementById('m-subcategory').value;
   const notes = document.getElementById('m-notes').value.trim();
-  const enabled = modal.ex.enabled !== false;
   if (modal.type === 'add') {
-    state.exercises.push({ id: uid(), name, category: cat, tags, notes, enabled });
+    state.exercises.push({ id: uid(), name, category: cat, family, subcategory, notes });
   } else {
     const ex = exById(modal.ex.id);
-    if (ex) Object.assign(ex, { name, category: cat, tags, notes, enabled });
+    if (ex) Object.assign(ex, { name, category: cat, family, subcategory, notes });
   }
   state.order = buildOrder(state.exercises, state.avoidPairs);
   modal = null; saveState(); render();
@@ -836,10 +973,6 @@ window.saveAvoid = () => {
 
 window.removeAvoid = i => { state.avoidPairs.splice(i, 1); saveState(); render(); };
 
-window.updateTagSuggestions = v => {
-  state.tagSuggestions = v.split(',').map(t => t.trim()).filter(Boolean);
-  saveState();
-};
 
 window.exportData = () => {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
@@ -858,7 +991,17 @@ window.importData = e => {
       if (!d.exercises) { alert('Invalid backup file.'); return; }
       state = d;
       if (!state.avoidPairs) state.avoidPairs = [];
-      if (!state.tagSuggestions) state.tagSuggestions = DEFAULT_TAGS;
+      // Migrate old format if needed
+      if (state.exercises[0] && state.exercises[0].tags) {
+        state.exercises = state.exercises.map(ex => ({
+          id: ex.id,
+          name: ex.name,
+          category: ex.category,
+          family: ex.tags && ex.tags[0] || 'Standing',
+          subcategory: ex.category === 'foundation' ? 'Foundation' : 'Stretch',
+          notes: ex.notes || ''
+        }));
+      }
       state.order = buildOrder(state.exercises, state.avoidPairs);
       saveState(); render(); alert('Imported successfully.');
     } catch { alert('Invalid JSON file.'); }
